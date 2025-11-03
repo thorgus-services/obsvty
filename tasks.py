@@ -43,3 +43,36 @@ def dev(c):
     print("Running tests...")
     test(c)
     print("All checks passed! 🎉")
+
+
+@task
+def generate_protos(c, ref="main", force=False):
+    """Generate gRPC stubs from OTLP proto files.
+
+    Args:
+        ref: Branch or tag to fetch (default: main)
+        force: Force re-download and regeneration
+    """
+    cmd = f"python generate_protos.py --ref {ref}"
+    if force:
+        cmd += " --force"
+    c.run(cmd)
+
+
+@task
+def safety_check(c):
+    """Run dependency vulnerability scanning using Safety."""
+    c.run("safety check --full-report")
+
+
+@task
+def docker_build(c):
+    """Build development Docker image."""
+    c.run("docker build -t obsvty:dev .")
+
+
+@task
+def setup(c):
+    """Run initial setup: generate protos and run dev checks."""
+    generate_protos(c)
+    dev(c)

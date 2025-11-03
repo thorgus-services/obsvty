@@ -58,7 +58,7 @@ We are building the **first functional end-to-end flow**:
 
 ## 🛠️ Technologies & Architecture
 
-- **Language**: Python (3.10+)
+- **Language**: Python (3.11+)
 - **Ingestion**: OTLP gRPC (OpenTelemetry)
 - **Storage**: DuckDB (lightweight, no external dependencies)
 - **LLM**: Any OpenAI-compatible provider (Ollama, OpenAI, Anthropic, etc.)
@@ -99,6 +99,71 @@ docker-compose up
 ```
 
 > ⚠️ **Still under construction!** We are in phase **M0/M1**. The runnable version will be released in the coming weeks.
+
+---
+
+## 🔧 Initial OTLP/gRPC Setup (TDD)
+
+This project follows Hexagonal Architecture and TDD for the initial OTLP/gRPC setup.
+
+### Prerequisites
+- Python 3.11+
+- Poetry 1.7+
+- Docker (optional)
+
+### One-time setup
+```bash
+# Install dependencies
+poetry install
+
+# Generate OTLP proto stubs
+invoke generate_protos
+
+# Run lint, typecheck and tests
+invoke dev
+
+# Optional: Vulnerability scan
+invoke safety_check
+```
+
+### Proto generation script
+```bash
+# Regenerate stubs from a specific ref (branch or tag)
+python generate_protos.py --ref main --force
+# With network timeout and validation
+python generate_protos.py --ref v1.1.0 --timeout 20 --force
+```
+
+### Environment configuration
+Copy `.env.example` to `.env` and adjust values if needed:
+```env
+OTLP_GRPC_HOST=0.0.0.0
+OTLP_GRPC_PORT=4317
+MAX_BUFFER_SIZE=10000
+LOG_LEVEL=INFO
+```
+
+### Architecture primitives (Ports & Use Cases)
+- Ports (in `src/obsvty/ports/`): `TraceIngestionPort`, `TraceBatchIngestionPort`, `TraceStoragePort`
+- Use Cases (in `src/obsvty/use_cases/`): `ProcessTraceUseCase`
+- Composition Root: `src/obsvty/main.py` with `build_use_cases(storage)`
+
+Run the package entrypoint:
+```bash
+python -m obsvty
+```
+
+### Tests
+Setup validation tests are in `tests/unit/test_setup_validation.py` and include:
+- Directory structure validation
+- Dependency version pinning check
+- Proto/stub generation validation
+- Dockerfile presence
+
+Run tests with coverage:
+```bash
+pytest --cov=src --cov-fail-under=80
+```
 
 ---
 
