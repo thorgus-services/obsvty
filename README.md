@@ -1,71 +1,71 @@
 # 🕵️‍♂️ Obsvty — Observability with Code Context
 
-> **Ferramentas de observabilidade te dizem _o que quebrou_.  
-> Obsvty te mostra _por que quebrou_ e _como consertar_ — com base no seu código.**
+> **Observability tools tell you _what broke_.  
+> Obsvty shows you _why it broke_ and _how to fix it_ — based on your code.**
 
-**Obsvty** é uma plataforma **open-source** que conecta dados de observabilidade (logs, métricas, traces) com mudanças no código e modelos de linguagem (LLMs) para gerar **insights acionáveis, contextualizados e seguros**.
+**Obsvty** is an **open-source** platform that connects observability data (logs, metrics, traces) with code changes and language models (LLMs) to generate **actionable, contextual, and secure insights**.
 
-Tudo isso com:
-- 🧩 **Arquitetura modular** — use qualquer LLM, versionador ou destino de alerta.
-- 🔒 **Privacy-first** — dados sensíveis nunca saem do seu ambiente.
-- 📦 **Auto-documentação técnica** — sua doc se atualiza conforme seu código e infra mudam.
-- 🌱 **Fácil de rodar e contribuir** — `docker-compose up` e pronto.
+All this with:
+- 🧩 **Modular architecture** — use any LLM, version control, or alert destination.
+- 🔒 **Privacy-first** — sensitive data never leaves your environment.
+- 📦 **Auto technical documentation** — your docs update as your code and infra change.
+- 🌱 **Easy to run and contribute** — `docker-compose up` and you're set.
 
 ---
 
-## 🔍 Por que Obsvty?
+## 🔍 Why Obsvty?
 
-A maioria das ferramentas de observabilidade para na pergunta:  
-> _“Onde está o erro?”_
+Most observability tools stop at the question:  
+> _“Where is the error?”_
 
-Mas engenheiros precisam saber:  
-> _“Qual commit causou isso? Qual linha de código devo revisar? Qual é a sugestão prática de correção?”_
+But engineers need to know:  
+> _“Which commit caused this? Which line of code should I review? What is the practical fix suggestion?”_
 
-**Obsvty preenche essa lacuna** ao correlacionar:
-- **Traces/logs (OTLP)** ↔ **Commits/PRs** ↔ **Sugestões de LLMs**
+**Obsvty bridges this gap** by correlating:
+- **Traces/logs (OTLP)** ↔ **Commits/PRs** ↔ **LLM Suggestions**
 
-### Exemplo de insight gerado:
+### Example of generated insight:
 ```markdown
-🔍 Insight detectado:
-- Métrica: latência média de /checkout subiu de 120ms → 480ms
-- Commit: d34db33f (adicionou validação síncrona de cartão)
-- Sugestão (LLM): “Mova a validação para fila assíncrona. Veja exemplo em docs/async-payment.md”
-- Alerta enviado para #eng-alerts (Slack)
+🔍 Detected insight:
+- Metric: average latency of /checkout rose from 120ms → 480ms
+- Commit: d34db33f (added synchronous card validation)
+- Suggestion (LLM): “Move validation to an async queue. See example in docs/async-payment.md”
+- Alert sent to #eng-alerts (Slack)
 ```
 
-Isso é **observabilidade inteligente** — não só dados, mas **ação**.
+This is **smart observability** — not just data, but **action**.
 
 ---
 
-## 🧱 Status do Projeto (MVP v0.1 – “Insight Loop”)
+## 🧱 Project Status (MVP v0.1 – “Insight Loop”)
 
-Estamos construindo o **primeiro fluxo end-to-end funcional**:
+We are building the **first functional end-to-end flow**:
 
 ```
-[OTLP] → [Compressão + Sanitização] → [LLM Modular] → [Alerta + Doc + Chat]
+[OTLP] → [Compression + Sanitization] → [Modular LLM] → [Alert + Doc + Chat]
                      ↑
            [GitHub: commit, PR, diff]
 ```
 
-### ✅ Critérios de sucesso do MVP:
-1. Você envia traces/logs via OTLP.
-2. Recebe um alerta no Slack com sugestão contextualizada ao commit.
-3. Acessa um chat (Streamlit) com todo o contexto: trace + código + recomendação.
-4. Confirma que **nenhum dado sensível** foi enviado ao LLM.
-5. Tudo isso roda localmente com `docker-compose up`.
+### ✅ MVP Success Criteria:
+1. You send traces/logs via OTLP.
+2. Receive a Slack alert with a commit-contextualized suggestion.
+3. Access a chat (Streamlit) with all the context: trace + code + recommendation.
+4. Confirm that **no sensitive data** was sent to the LLM.
+5. All runs locally with `docker-compose up`.
 
 ---
 
-## 🛠️ Tecnologias & Arquitetura
+## 🛠️ Technologies & Architecture
 
-- **Linguagem**: Python (3.10+)
-- **Ingestão**: OTLP gRPC (OpenTelemetry)
-- **Storage**: DuckDB (leve, sem dependências externas)
-- **LLM**: Qualquer provedor OpenAI-compatible (Ollama, OpenAI, Anthropic, etc.)
-- **Frontend**: Streamlit (protótipo rápido e iterável)
-- **Extensibilidade**: Interfaces abstratas para plugins (Git, LLM, Alertas, Docs)
+- **Language**: Python (3.10+)
+- **Ingestion**: OTLP gRPC (OpenTelemetry)
+- **Storage**: DuckDB (lightweight, no external dependencies)
+- **LLM**: Any OpenAI-compatible provider (Ollama, OpenAI, Anthropic, etc.)
+- **Frontend**: Streamlit (fast, iterative prototype)
+- **Extensibility**: Abstract interfaces for plugins (Git, LLM, Alerts, Docs)
 
-### Interfaces principais (em `obsvty/ports/`):
+### Main interfaces (in `obsvty/ports/`):
 ```python
 class GitProvider(ABC): ...
 class LLMEngine(ABC): ...
@@ -73,26 +73,24 @@ class AlertPlugin(ABC): ...
 class DocGenerator(ABC): ...
 ```
 
-Quer adicionar suporte a GitLab? Confluence? Um novo modelo local? Basta implementar a interface.
+Want to add support for GitLab? Confluence? A new local model? Just implement the interface.
 
 ---
 
-## 🗺️ Roadmap Público
+## 🗺️ Public Roadmap
 
-| Fase | Nome | Objetivo |
-|------|------|--------|
-| **M0** | Bootstrapping | Repo, CI, estrutura modular |
-| **M1** | Observability Core | OTLP + compressão + detecção |
-| **M2** | AI Brain | LLM seguro + workflow modular |
-| **M3** | Context Connect | GitHub + Slack + doc automática |
-| **M4** | Insight Chat | UI com chat contextual |
-| **M5** | First Release | Lançamento comunitário |
-
-👉 Veja [ROADMAP.md](./ROADMAP.md) para detalhes e como influenciar as próximas features.
+| Phase | Name | Goal |
+|-------|------|------|
+| **M0** | Bootstrapping | Repo, CI, modular structure |
+| **M1** | Observability Core | OTLP + compression + detection |
+| **M2** | AI Brain | Secure LLM + modular workflow |
+| **M3** | Context Connect | GitHub + Slack + auto doc |
+| **M4** | Insight Chat | UI with contextual chat |
+| **M5** | First Release | Community launch |
 
 ---
 
-## 🚀 Como Rodar Localmente (em breve)
+## 🚀 How to Run Locally (coming soon)
 
 ```bash
 git clone https://github.com/thorgus-services/obsvty.git
@@ -100,35 +98,35 @@ cd obsvty
 docker-compose up
 ```
 
-> ⚠️ **Ainda em construção!** Estamos na fase **M0/M1**. A versão executável virá nas próximas semanas.
+> ⚠️ **Still under construction!** We are in phase **M0/M1**. The runnable version will be released in the coming weeks.
 
 ---
 
-## 🤝 Quer Contribuir?
+## 🤝 Want to Contribute?
 
-Obsvty nasce como um projeto da comunidade, para a comunidade.
+Obsvty is born as a project from the community, for the community.
 
-### Você pode:
-- 🧪 Testar o MVP assim que lançado
-- 🧩 Escrever um plugin (ex: GitLab, Jira, Confluence)
-- 🧠 Sugerir melhorias de compressão de traces ou detecção de anomalias
-- 📝 Melhorar a documentação ou escrever tutoriais
+### You can:
+- 🧪 Test the MVP as soon as it's released
+- 🧩 Write a plugin (e.g.: GitLab, Jira, Confluence)
+- 🧠 Suggest improvements for trace compression or anomaly detection
+- 📝 Improve documentation or write tutorials
 
-Veja [CONTRIBUTING.md](./docs/CONTRIBUTING.md) para começar.
-
----
-
-## 📜 Licença
-
-Apache License 2.0 — veja [LICENSE](./LICENSE).
+See [CONTRIBUTING.md](./docs/CONTRIBUTING.md) to get started.
 
 ---
 
-## 📣 Fale Conosco
+## 📜 License
 
-- Abra uma [Issue](https://github.com/thorgus-services/obsvty/issues)
-- [Me chame diretamente](https://www.linkedin.com/in/fernandojr-dev/)
+Apache License 2.0 — see [LICENSE](./LICENSE).
 
 ---
 
-> **Obsvty**: porque entender o *porquê* é tão importante quanto ver o *o quê**.
+## 📣 Contact Us
+
+- Open an [Issue](https://github.com/thorgus-services/obsvty/issues)
+- [Contact me directly](https://www.linkedin.com/in/fernandojr-dev/)
+
+---
+
+> **Obsvty**: because understanding the *why* is as important as seeing the *what*.

@@ -1,172 +1,172 @@
-# 🔄 Template de Refinamento Iterativo
+# 🔄 Iterative Refinement Template
 
-## 🏷️ Metadados do Processo Iterativo
+## 🏷️ Iterative Process Metadata
 - **Process ID**: {{process_id}}
-- **Tipo**: Context Refinement
-- **Contexto Alvo**: {{target_context}} (ex: PRP específico, documentação)
-- **Número de Iterações Planejadas**: {{planned_iterations}}
-- **Duração Estimada**: {{estimated_duration}} (ex: 2 horas, 1 sprint)
+- **Type**: Context Refinement
+- **Target Context**: {{target_context}} (e.g., specific PRP, documentation)
+- **Planned Iterations**: {{planned_iterations}}
+- **Estimated Duration**: {{estimated_duration}} (e.g., 2 hours, 1 sprint)
 
-## 🎯 Objetivo do Refinamento
+## 🎯 Refinement Objective
 
-### Meta Principal
+### Main Goal
 ```
 {{main_goal}}
-# Exemplo:
-# "Refinar o PRP de autenticação para garantir especificação completa e sem ambiguidades,
-# reduzindo necessidade de retrabalho durante implementação"
+# Example:
+# "Refine the authentication PRP to ensure complete and unambiguous specification,
+# reducing the need for rework during implementation"
 ```
 
-### Critérios de Sucesso
+### Success Criteria
 ```
 {{success_criteria}}
-# - Claridade: Especificação compreensível por todos os stakeholders
-# - Completeza: Todos os requisitos funcionais e não-funcionais cobertos
-# - Consistência: Sem contradições entre diferentes partes do contexto
-# - Mensurável: Critérios de aceitação quantificáveis
-# - Testável: Possibilidade de verificação automática
+# - Clarity: Specification understandable by all stakeholders
+# - Completeness: All functional and non-functional requirements covered
+# - Consistency: No contradictions between different parts of the context
+# - Measurable: Quantifiable acceptance criteria
+# - Testable: Possibility of automated verification
 ```
 
-## 🔍 Fase 1: Análise Inicial
+## 🔍 Phase 1: Initial Analysis
 
-### Contexto Atual
+### Current Context
 ```
 {{current_context}}
-# Estado atual do contexto/PRP/documentação
-# Pontos fortes identificados
-# Lacunas e ambiguidades detectadas
-# Áreas que necessitam clarificação
+# Current state of context/PRP/documentation
+# Identified strengths
+# Detected gaps and ambiguities
+# Areas needing clarification
 ```
 
-### Identificação de Problemas
+### Problem Identification
 ```
 {{problem_identification}}
-# 1. Requisitos ambíguos ou subjetivos
-# 2. Informações técnicas missing
-# 3. Dependências não mapeadas
-# 4. Casos de borda não considerados
-# 5. Conflitos entre diferentes partes do contexto
+# 1. Ambiguous or subjective requirements
+# 2. Missing technical information
+# 3. Unmapped dependencies
+# 4. Unconsidered edge cases
+# 5. Conflicts between different parts of the context
 ```
 
-### Stakeholders para Consulta
+### Stakeholders for Consultation
 ```
 {{consultation_stakeholders}}
-# - Product Owner: Para clarificar requisitos de negócio
-# - Tech Lead: Para validar viabilidade técnica
-# - QA Team: Para definir critérios de aceitação
-# - UX Designer: Para especificações de interface
-# - DevOps: Para requisitos de infraestrutura
+# - Product Owner: To clarify business requirements
+# - Tech Lead: To validate technical feasibility
+# - QA Team: To define acceptance criteria
+# - UX Designer: For interface specifications
+# - DevOps: For infrastructure requirements
 ```
 
-## 🛠️ Fase 2: Estratégia de Refinamento
+## 🛠️ Phase 2: Refinement Strategy
 
-### Técnicas de Refinamento
+### Refinement Techniques
 ```
 {{refinement_techniques}}
-# - 5 Whys: Para chegar à raiz dos problemas
-# - Example Mapping: Para clarificar requisitos com exemplos
-# - Behavior Driven Development: Para especificação por comportamento
-# - Decision Records: Para documentar escolhas técnicas
-# - Peer Review: Para validação cruzada
+# - 5 Whys: To get to the root of problems
+# - Example Mapping: To clarify requirements with examples
+# - Behavior Driven Development: For behavior-based specification
+# - Decision Records: To document technical choices
+# - Peer Review: For cross-validation
 ```
 
-### Ferramentas de Apoio
+### Support Tools
 ```
 {{support_tools}}
-# - Miro/FigJam: Para sessões colaborativas
-# - Confluence/Notion: Para documentação
-# - JIRA/Trello: Para tracking de tasks
-# - Slack/Teams: Para comunicação
-# - Version Control: Para histórico de mudanças
+# - Miro/FigJam: For collaborative sessions
+# - Confluence/Notion: For documentation
+# - JIRA/Trello: For task tracking
+# - Slack/Teams: For communication
+# - Version Control: For change history
 ```
 
-### Plano de Iterações
+### Iteration Plan
 ```
 {{iteration_plan}}
-# Iteração 1: Foco em requisitos funcionais principais
-# Iteração 2: Adicionar requisitos não-funcionais
-# Iteração 3: Especificar casos de borda e exceções
-# Iteração 4: Validação final com todos stakeholders
-# Iteração 5: Ajustes finais e aprovação
+# Iteration 1: Focus on main functional requirements
+# Iteration 2: Add non-functional requirements
+# Iteration 3: Specify edge cases and exceptions
+# Iteration 4: Final validation with all stakeholders
+# Iteration 5: Final adjustments and approval
 ```
 
-## 📝 Fase 3: Execução Iterativa
+## 📝 Phase 3: Iterative Execution
 
-### Template de Sessão de Refinamento
+### Refinement Session Template
 ```
 {{refinement_session}}
-# Data: {{date}}
-# Participantes: {{participants}}
-# Objetivo da Sessão: {{session_goal}}
+# Date: {{date}}
+# Participants: {{participants}}
+# Session Goal: {{session_goal}}
 #
-# Discussões:
-# - Tópico 1: {{discussion_1}}
-# - Decisão: {{decision_1}}
-# - Ações: {{action_1}}
+# Discussions:
+# - Topic 1: {{discussion_1}}
+# - Decision: {{decision_1}}
+# - Actions: {{action_1}}
 #
-# - Tópico 2: {{discussion_2}}
-# - Decisão: {{decision_2}}
-# - Ações: {{action_2}}
+# - Topic 2: {{discussion_2}}
+# - Decision: {{decision_2}}
+# - Actions: {{action_2}}
 ```
 
-### Registro de Mudanças
+### Change Log
 ```
 {{change_log}}
-# Iteração {{iteration_number}} - {{date}}
-# - Adicionado: {{added_items}}
-# - Removido: {{removed_items}}
-# - Modificado: {{modified_items}}
-# - Clarificado: {{clarified_items}}
-# - Validado: {{validated_items}}
+# Iteration {{iteration_number}} - {{date}}
+# - Added: {{added_items}}
+# - Removed: {{removed_items}}
+# - Modified: {{modified_items}}
+# - Clarified: {{clarified_items}}
+# - Validated: {{validated_items}}
 ```
 
-### Checklist de Validação por Iteração
+### Validation Checklist per Iteration
 ```
 {{validation_checklist}}
-# [ ] Todos os requisitos estão claros e não-ambíguos?
-# [ ] Casos de uso principais estão cobertos?
-# [ ] Requisitos não-funcionais estão especificados?
-# [ ] Dependências estão mapeadas?
-# [ ] Critérios de aceitação são mensuráveis?
-# [ ] Documentação está consistente?
+# [ ] Are all requirements clear and unambiguous?
+# [ ] Are main use cases covered?
+# [ ] Are non-functional requirements specified?
+# [ ] Are dependencies mapped?
+# [ ] Are acceptance criteria measurable?
+# [ ] Is documentation consistent?
 ```
 
-## 🔄 Fase 4: Processo de Feedback
+## 🔄 Phase 4: Feedback Process
 
-### Mecanismos de Coleta de Feedback
+### Feedback Collection Mechanisms
 ```
 {{feedback_mechanisms}}
-# - Revisões formais com stakeholders
-# - Sessões de pairing para validação técnica
-# - Prototipagem rápida para feedback de UX
-# - Spike técnico para validação de viabilidade
-# - Documentos compartilhados para comentários assíncronos
+# - Formal reviews with stakeholders
+# - Pairing sessions for technical validation
+# - Rapid prototyping for UX feedback
+# - Technical spike for feasibility validation
+# - Shared documents for asynchronous comments
 ```
 
-### Template de Solicitação de Feedback
+### Feedback Request Template
 ```
 {{feedback_request}}
-# Contexto: {{context_description}}
-# Área Específica: {{specific_area}}
-# Tipo de Feedback Necessário: {{feedback_type}} (ex: técnico, negócio, UX)
-# Prazo para Feedback: {{feedback_deadline}}
-# Formato Preferido: {{feedback_format}} (ex: comentários no doc, reunião)
+# Context: {{context_description}}
+# Specific Area: {{specific_area}}
+# Type of Feedback Needed: {{feedback_type}} (e.g., technical, business, UX)
+# Feedback Deadline: {{feedback_deadline}}
+# Preferred Format: {{feedback_format}} (e.g., document comments, meeting)
 ```
 
-### Processamento de Feedback
+### Feedback Processing
 ```
 {{feedback_processing}}
-# 1. Coletar todo feedback recebido
-# 2. Categorizar por tipo e urgência
-# 3. Priorizar based on impact
-# 4. Incorporar changes no contexto
-# 5. Documentar decisões tomadas
-# 6. Comunicar mudanças aos stakeholders
+# 1. Collect all received feedback
+# 2. Categorize by type and urgency
+# 3. Prioritize based on impact
+# 4. Incorporate changes into context
+# 5. Document decisions made
+# 6. Communicate changes to stakeholders
 ```
 
-## 📊 Fase 5: Métricas de Progresso
+## 📊 Phase 5: Progress Metrics
 
-### Indicadores de Qualidade do Contexto
+### Context Quality Indicators
 ```
 {{quality_indicators}}
 # - Completeness Score: {{completeness}}%
@@ -176,86 +176,86 @@
 # - Ambiguity Count: {{ambiguity_count}}
 ```
 
-### Velocidade de Refinamento
+### Refinement Velocity
 ```
 {{refinement_velocity}}
-# - Iterações Completadas: {{completed_iterations}}
-# - Tempo Médio por Iteração: {{avg_time_per_iteration}}
-# - Issues Resolvidas por Iteração: {{issues_resolved}}
-# - Feedback Incorporação Rate: {{feedback_incorporation}}%
+# - Completed Iterations: {{completed_iterations}}
+# - Average Time per Iteration: {{avg_time_per_iteration}}
+# - Issues Resolved per Iteration: {{issues_resolved}}
+# - Feedback Incorporation Rate: {{feedback_incorporation}}%
 ```
 
-### ROI do Processo Iterativo
+### Iterative Process ROI
 ```
 {{roi_calculation}}
-# - Tempo Investido: {{time_invested}} horas
-# - Retrabalho Evitado: {{rework_avoided}} horas
-# - Bugs Prevenidos: {{bugs_prevented}}
-# - ROI: {{roi}} (ex: 3:1 - para cada hora investida, 3 horas economizadas)
+# - Time Invested: {{time_invested}} hours
+# - Rework Avoided: {{rework_avoided}} hours
+# - Bugs Prevented: {{bugs_prevented}}
+# - ROI: {{roi}} (e.g., 3:1 - for each hour invested, 3 hours saved)
 ```
 
-## 🚨 Fase 6: Gestão de Riscos
+## 🚨 Phase 6: Risk Management
 
-### Riscos do Processo Iterativo
+### Iterative Process Risks
 ```
 {{process_risks}}
-# - Analysis Paralysis: Refinar demais sem progresso
-# - Scope Creep: Adicionar requisitos não essenciais
-# - Stakeholder Disengagement: Perda de interesse
-# - Inconsistências: Introduzir contradições
-# - Time Sink: Gastar tempo desproporcional
+# - Schedule risks: Delays in feedback, iteration overrun
+# - Quality risks: Incomplete validation, missed requirements
+# - Resource risks: Stakeholder availability, tool limitations
+# - Technical risks: Integration issues, compatibility problems
 ```
 
-### Mitigation Strategies
+### Risk Mitigation Strategies
 ```
-{{mitigation_strategies}}
-# - Timeboxing: Limitar tempo por iteração
-# - Minimum Viable Context: Focar no essencial primeiro
-# - Regular Check-ins: Manter stakeholders engajados
-# - Decision Log: Documentar para evitar revisitação
-# - Exit Criteria: Definir quando parar de refinar
-```
-
-### Critérios de Saída
-```
-{{exit_criteria}}
-# [ ] Todos os stakeholders aprovaram?
-# [ ] Critérios de aceitação estão definidos?
-# [ ] Requisitos não-funcionais estão cobertos?
-# [ ] Dependências estão mapeadas?
-# [ ] Riscos técnicos estão identificados?
-# [ ] Plano de implementação está claro?
+{{risk_mitigation}}
+# - Clear timelines and deadlines for each iteration
+# - Multiple validation layers and checkpoints
+# - Backup stakeholders identified
+# - Technical spikes for high-risk areas
+# - Regular progress monitoring and adjustments
 ```
 
-## 📋 Fase 7: Documentação Final
-
-### Template de Relatório de Refinamento
+### Contingency Plans
 ```
-{{refinement_report}}
-# Resumo do Processo:
-# - Iterações Realizadas: {{iterations_done}}
-# - Tempo Total: {{total_time}} horas
-# - Principais Melhorias: {{key_improvements}}
-# - ROI Estimado: {{estimated_roi}}
-#
-# Estado Final do Contexto:
-# - Completeness: {{final_completeness}}%
-# - Clarity: {{final_clarity_score}}
-# - Stakeholder Satisfaction: {{satisfaction}}%
-#
-# Lições Aprendidas: {{lessons_learned}}
+{{contingency_plans}}
+# - Backup meeting slots for critical reviews
+# - Asynchronous feedback options
+# - Alternative technical approaches
+# - Escalation paths for blockers
+# - Emergency stakeholder contacts
 ```
 
-### Checklist de Finalização
+## 📈 Phase 7: Continuous Improvement
+
+### Process Improvement Metrics
 ```
-{{completion_checklist}}
-# [ ] Contexto versionado e armazenado
-# [ ] Histórico de mudanças documentado
-# [ ] Approvals coletados de todos stakeholders
-# [ ] Plano de comunicação das mudanças
-# [ ] Setup para monitoramento contínuo
-# [ ] Processo definido para futuros refinamentos
+{{improvement_metrics}}
+# - Time to completion trend
+# - Quality score evolution
+# - Stakeholder satisfaction trend
+# - Rework reduction rate
+# - Process efficiency gains
+```
+
+### Lessons Learned Log
+```
+{{lessons_learned}}
+# Date: {{date}}
+# Process Area: {{process_area}}
+# What Worked Well: {{successes}}
+# What Could Improve: {{improvements}}
+# Action Items: {{actions}}
+```
+
+### Process Adjustments
+```
+{{process_adjustments}}
+# - Refinement session format optimization
+# - Documentation template improvements
+# - Feedback collection streamlining
+# - Tool usage optimization
+# - Communication flow enhancements
 ```
 
 ---
-*Template de Refinamento Iterativo - Para evolução contínua e melhoria de contextos através de ciclos estruturados de feedback*
+*Template based on Agile Refinement and Continuous Improvement principles*

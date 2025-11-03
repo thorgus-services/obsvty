@@ -1,177 +1,177 @@
-# ✅ Checklist de Validação de Contexto
+# ✅ Context Validation Checklist
 
-## 📋 Metadados da Validação
-- **Contexto Validado**: {{context_name}}
-- **Versão do Contexto**: {{context_version}}
-- **Data da Validação**: {{validation_date}}
-- **Validador**: {{validator}}
+## 📋 Validation Metadata
+- **Validated Context**: {{context_name}}
+- **Context Version**: {{context_version}}
+- **Validation Date**: {{validation_date}}
+- **Validator**: {{validator}}
 - **Status**: {{validation_status}}
 
 ## 🎯 System Context Layer Validation
 
 ### ✅ Role Definition
-- [ ] **Role está claramente definida** (ex: "Engenheiro de Software Sênior")
-- [ ] **Domínio de especialização** especificado
-- [ ] **Anos de experiência** definidos (quando aplicável)
-- [ ] **Missão principal** claramente articulada
-- [ ] **Metodologias de referência** incluídas
+- [ ] **Role is clearly defined** (e.g., "Senior Software Engineer")
+- [ ] **Specialization domain** specified
+- [ ] **Years of experience** defined (when applicable)
+- [ ] **Main mission** clearly articulated
+- [ ] **Reference methodologies** included
 
 ### ✅ Behavioral Constraints
-- [ ] **Tom de voz** apropriado para o contexto
-- [ ] **Nível de detalhe** especificado (alto/médio/baixo)
-- [ ] **Limites de atuação** claramente definidos
-- [ ] **Políticas de segurança** estabelecidas
-- [ ] **Restrições éticas** consideradas (quando aplicável)
+- [ ] **Tone of voice** appropriate for context
+- [ ] **Level of detail** specified (high/medium/low)
+- [ ] **Operating boundaries** clearly defined
+- [ ] **Security policies** established
+- [ ] **Ethical constraints** considered (when applicable)
 
 ## 📚 Domain Context Layer Validation
 
 ### ✅ Key Terminology
-- [ ] **Terminologia específica** do domínio incluída
-- [ ] **Siglas e acrônimos** definidos
-- [ ] **Conceitos complexos** explicados
-- [ ] **Glossário mínimo** estabelecido
+- [ ] **Domain-specific terminology** included
+- [ ] **Acronyms and abbreviations** defined
+- [ ] **Complex concepts** explained
+- [ ] **Minimum glossary** established
 
 ### ✅ Methodologies & Patterns
-- [ ] **Metodologias** relevantes especificadas
-- [ ] **Padrões de design** apropriados incluídos
-- [ ] **Princípios arquiteturais** definidos
-- [ ] **Boas práticas** do domínio estabelecidas
+- [ ] **Relevant methodologies** specified
+- [ ] **Appropriate design patterns** included
+- [ ] **Architectural principles** defined
+- [ ] **Domain best practices** established
 
 ### ✅ Reference Architecture
-- [ ] **Arquitetura de referência** descrita
-- [ ] **Padrões de comunicação** especificados
-- [ ] **Tecnologias principais** listadas
-- [ ] **Componentes do sistema** mapeados
+- [ ] **Reference architecture** described
+- [ ] **Communication patterns** specified
+- [ ] **Core technologies** listed
+- [ ] **System components** mapped
 
 ## 🎯 Task Context Layer Validation
 
 ### ✅ Primary Objective
-- [ ] **Objetivo principal** claramente formulado
-- [ ] **Escopo do trabalho** bem delimitado
-- [ ] **Entregas esperadas** especificadas
-- [ ] **Prazo ou timeline** estabelecida (quando aplicável)
+- [ ] **Main objective** clearly formulated
+- [ ] **Work scope** well defined
+- [ ] **Expected deliverables** specified
+- [ ] **Timeline or deadline** established (when applicable)
 
 ### ✅ Success Criteria
-- [ ] **Critérios funcionais** mensuráveis definidos
-- [ ] **Critérios não-funcionais** estabelecidos
-- [ ] **Métricas de qualidade** especificadas
-- [ ] **Critérios de aceitação** claros
+- [ ] **Measurable functional criteria** defined
+- [ ] **Non-functional criteria** established
+- [ ] **Quality metrics** specified
+- [ ] **Acceptance criteria** clear
 
 ### ✅ Constraints & Requirements
-- [ ] **Tecnologias obrigatórias** listadas
-- [ ] **Restrições técnicas** consideradas
-- [ ] **Requisitos de negócio** incorporados
-- [ ] **Dependências externas** identificadas
+- [ ] **Mandatory technologies** listed
+- [ ] **Technical constraints** considered
+- [ ] **Business requirements** incorporated
+- [ ] **External dependencies** identified
 
 ## 💬 Interaction Context Layer Validation
 
 ### ✅ Communication Style
-- [ ] **Frequência de feedback** estabelecida
-- [ ] **Tratamento de erros** definido
-- [ ] **Processo de clarificação** especificado
-- [ ] **Estilo de colaboração** apropriado
+- [ ] **Feedback frequency** established
+- [ ] **Error handling** defined
+- [ ] **Clarification process** specified
+- [ ] **Collaboration style** appropriate
 
 ### ✅ Examples & Patterns
-- [ ] **Exemplos de boa interação** incluídos
-- [ ] **Padrões de comunicação** estabelecidos
-- [ ] **Cenários de uso** descritos
-- [ ] **Casos de borda** considerados
+- [ ] **Good interaction examples** included
+- [ ] **Communication patterns** established
+- [ ] **Usage scenarios** described
+- [ ] **Edge cases** considered
 
 ### ✅ Expected Behavior
-- [ ] **Nível de proatividade** definido
-- [ ] **Transparência esperada** estabelecida
-- [ ] **Grau de iteratividade** especificado
-- [ ] **Autonomia vs. orientação** balanceada
+- [ ] **Proactivity level** defined
+- [ ] **Expected transparency** established
+- [ ] **Degree of iterativeness** specified
+- [ ] **Autonomy vs. guidance** balanced
 
 ## 📊 Response Context Layer Validation
 
 ### ✅ Output Format Specification
-- [ ] **Formato de saída** claramente definido
-- [ ] **Estrutura de documentação** especificada
-- [ ] **Padrões de diagramação** estabelecidos
-- [ ] **Formatos de dados** apropriados
+- [ ] **Output format** clearly defined
+- [ ] **Documentation structure** specified
+- [ ] **Diagram standards** established
+- [ ] **Data formats** appropriate
 
 ### ✅ Structure Requirements
-- [ ] **Requisitos de organização** definidos
-- [ ] **Padrões de documentação** estabelecidos
-- [ ] **Exemplos obrigatórios** especificados
-- [ ] **Convenções de nomenclatura** incluídas
+- [ ] **Organization requirements** defined
+- [ ] **Documentation standards** established
+- [ ] **Mandatory examples** specified
+- [ ] **Naming conventions** included
 
 ### ✅ Validation Rules
-- [ ] **Regras de validação** estabelecidas
-- [ ] **Critérios de qualidade** definidos
-- [ ] **Padrões de código** especificados
-- [ ] **Requisitos de teste** incluídos
+- [ ] **Validation rules** established
+- [ ] **Quality criteria** defined
+- [ ] **Code standards** specified
+- [ ] **Testing requirements** included
 
 ## 🔄 Context Integration Validation
 
 ### ✅ Context Chaining
-- [ ] **Próximos contextos** identificados
-- [ ] **Sequência lógica** estabelecida
-- [ ] **Transições suaves** garantidas
+- [ ] **Next contexts** identified
+- [ ] **Logical sequence** established
+- [ ] **Smooth transitions** ensured
 
 ### ✅ Dependencies
-- [ ] **Dependências de contexto** mapeadas
-- [ ] **Contextos relacionados** identificados
-- [ ] **Integrações necessárias** especificadas
+- [ ] **Context dependencies** mapped
+- [ ] **Related contexts** identified
+- [ ] **Required integrations** specified
 
-## 🚨 Validação de Riscos e Mitigações
+## 🚨 Risk and Mitigation Validation
 
 ### ✅ Risk Assessment
-- [ ] **Riscos de ambiguidade** identificados
-- [ ] **Pontos de falha potencial** mapeados
-- [ ] **Áreas de complexidade** sinalizadas
-- [ ] **Possíveis mal-entendidos** antecipados
+- [ ] **Ambiguity risks** identified
+- [ ] **Potential failure points** mapped
+- [ ] **Complexity areas** flagged
+- [ ] **Possible misunderstandings** anticipated
 
 ### ✅ Mitigation Strategies
-- [ ] **Estratégias de mitigação** propostas
-- [ ] **Planos de contingência** estabelecidos
-- [ ] **Mecanismos de fallback** definidos
+- [ ] **Mitigation strategies** proposed
+- [ ] **Contingency plans** established
+- [ ] **Fallback mechanisms** defined
 
-## 📊 Métricas de Validação
+## 📊 Validation Metrics
 
 ### ✅ Quantitative Metrics
-- [ ] **Completude do contexto** (% de seções preenchidas)
-- [ ] **Clareza das instruções** (escala 1-5)
-- [ ] **Especificidade dos critérios** (escala 1-5)
-- [ ] **Consistência interna** (escala 1-5)
+- [ ] **Context completeness** (% of sections filled)
+- [ ] **Instruction clarity** (scale 1-5)
+- [ ] **Criteria specificity** (scale 1-5)
+- [ ] **Internal consistency** (scale 1-5)
 
 ### ✅ Qualitative Assessment
-- [ ] **Adequação ao propósito** avaliada
-- [ ] **Potencial de sucesso** estimado
-- [ ] **Risco de misinterpretação** avaliado
-- [ ] **Valor educacional** considerado
+- [ ] **Purpose fitness** evaluated
+- [ ] **Success potential** estimated
+- [ ] **Misinterpretation risk** assessed
+- [ ] **Educational value** considered
 
-## 📝 Resultado da Validação
+## 📝 Validation Result
 
 ### ✅ Final Validation Score
 ```
-Completude: {{completeness_score}}/100
-Clareza: {{clarity_score}}/5
-Especificidade: {{specificity_score}}/5
-Consistência: {{consistency_score}}/5
+Completeness: {{completeness_score}}/100
+Clarity: {{clarity_score}}/5
+Specificity: {{specificity_score}}/5
+Consistency: {{consistency_score}}/5
 ```
 
 ### ✅ Approval Status
-- [ ] **✅ APROVADO** - Contexto pronto para execução
-- [ ] **⚠️  APROVADO COM RESSALVAS** - Pequenos ajustes necessários
-- [ ] **❌ REPROVADO** - Retrabalho significativo necessário
+- [ ] **✅ APPROVED** - Context ready for execution
+- [ ] **⚠️  APPROVED WITH RESERVATIONS** - Minor adjustments needed
+- [ ] **❌ REJECTED** - Significant rework needed
 
 ### ✅ Next Steps
 ```
 {{next_steps}}
-# Exemplo:
-# - Executar PRP correspondente
-# - Refinar seções específicas
-# - Coletar feedback inicial
+# Example:
+# - Execute corresponding PRP
+# - Refine specific sections
+# - Collect initial feedback
 ```
 
-## 🔄 Histórico de Validações
+## 🔄 Validation History
 
 ### Validation Log
-| Data | Versão | Validador | Status | Pontuação |
-|------|--------|-----------|--------|-----------|
+| Date | Version | Validator | Status | Score |
+|------|---------|-----------|---------|-------|
 | {{date}} | {{version}} | {{validator}} | {{status}} | {{score}} |
 
 ---
-*Checklist baseado nos princípios de Context Engineering - Garantia de qualidade antes da execução*
+*Checklist based on Context Engineering principles - Quality assurance before execution*

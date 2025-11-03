@@ -1,36 +1,36 @@
-# 🚀 PRP - Desenvolvimento Backend
+# 🚀 PRP - Backend Development
 
-## 🏷️ Metadados do PRP Backend
+## 🏷️ Backend PRP Metadata
 - **PRP ID**: {{prp_id}}
-- **Tipo**: Backend Development
-- **Domínio**: {{domain}} (ex: API, Microservice, Database)
-- **Tecnologia**: {{technology}} (ex: Python/FastAPI, Node.js/Express)
-- **Complexidade**: {{complexity}}
+- **Type**: Backend Development
+- **Domain**: {{domain}} (e.g.: API, Microservice, Database)
+- **Technology**: {{technology}} (e.g.: Python/FastAPI, Node.js/Express)
+- **Complexity**: {{complexity}}
 
 ## 🎯 Business Context Layer
 
 ### Backend Business Objectives
 ```
 {{backend_objectives}}
-# Exemplo:
-# "Desenvolver API RESTful para gestão de usuários que reduza tempo de resposta 
-# em 50% e suporte 1000 req/segundo com 99.9% disponibilidade"
+# Example:
+# "Develop RESTful API for user management that reduces response time 
+# by 50% and supports 1000 req/second with 99.9% availability"
 ```
 
 ### SLAs & Performance Requirements
-- **Disponibilidade**: {{availability}} (ex: 99.9%)
-- **Latência**: {{latency}} (ex: < 200ms p95)
-- **Throughput**: {{throughput}} (ex: 1000 req/seg)
-- **Escalabilidade**: {{scalability}} (ex: horizontal scaling)
+- **Availability**: {{availability}} (e.g.: 99.9%)
+- **Latency**: {{latency}} (e.g.: < 200ms p95)
+- **Throughput**: {{throughput}} (e.g.: 1000 req/sec)
+- **Scalability**: {{scalability}} (e.g.: horizontal scaling)
 
 ## 👥 Stakeholder Analysis
 
 ### Backend Stakeholders
 ```
 {{backend_stakeholders}}
-# - Mobile Developers: Consomem APIs RESTful
-# - Web Frontend: Utiliza endpoints JSON
-# - DevOps: Precisam de health checks e métricas
+# - Mobile Developers: Consume RESTful APIs
+# - Web Frontend: Uses JSON endpoints
+# - DevOps: Need health checks and metrics
 # - Database Admins: Concerned with query performance
 ```
 
@@ -59,17 +59,17 @@
 ```
 
 ### Database Requirements
-- **SGBD**: {{database}} (ex: PostgreSQL, MySQL, MongoDB)
-- **Migrations**: {{migrations}} (ex: Alembic, Flyway)
-- **Indexes**: {{indexes}} (ex: email unique index)
-- **Constraints**: {{constraints}} (ex: foreign keys, not null)
+- **DBMS**: {{database}} (e.g.: PostgreSQL, MySQL, MongoDB)
+- **Migrations**: {{migrations}} (e.g.: Alembic, Flyway)
+- **Indexes**: {{indexes}} (e.g.: email unique index)
+- **Constraints**: {{constraints}} (e.g.: foreign keys, not null)
 
 ## 🔧 Backend Technical Translation
 
 ### Architecture Pattern
 ```
 {{architecture_pattern}}
-# Exemplo para Python/FastAPI:
+# Example for Python/FastAPI:
 # - Pattern: Controller-Service-Repository
 # - Controllers: FastAPI routers with dependency injection
 # - Services: Business logic with unit tests
@@ -78,10 +78,10 @@
 ```
 
 ### Technology Stack Specifics
-- **Framework**: {{framework}} (ex: FastAPI, Express.js, Spring Boot)
-- **ORM/ODM**: {{orm}} (ex: SQLAlchemy, Mongoose, TypeORM)
-- **Validation**: {{validation}} (ex: Pydantic, Joi, class-validator)
-- **Authentication**: {{auth}} (ex: JWT, OAuth2, API keys)
+- **Framework**: {{framework}} (e.g.: FastAPI, Express.js, Spring Boot)
+- **ORM/ODM**: {{orm}} (e.g.: SQLAlchemy, Mongoose, TypeORM)
+- **Validation**: {{validation}} (e.g.: Pydantic, Joi, class-validator)
+- **Authentication**: {{auth}} (e.g.: JWT, OAuth2, API keys)
 
 ### API Design Specifications
 ```
@@ -129,16 +129,16 @@
 # ├── services/            # Business logic
 # │   ├── user_service.py
 # │   └── __init__.py
-# ├── repositories/       # Data access
+# ├── repositories/        # Data access
 # │   ├── user_repository.py
 # │   └── __init__.py
-# ├── models/              # Database models
+# ├── models/             # Database models
 # │   ├── user_model.py
 # │   └── __init__.py
-# ├── schemas/             # Pydantic schemas
+# ├── schemas/            # Pydantic schemas
 # │   ├── user_schema.py
 # │   └── __init__.py
-# └── config.py            # Configuration
+# └── config.py           # Configuration
 ```
 
 ### Environment Configuration
@@ -200,75 +200,79 @@
 ```
 {{backend_pitfalls}}
 # - N+1 query problems
-# - Race conditions in concurrent updates
-# - Database connection leaks
-# - Improper error handling leading to information disclosure
-# - Missing input validation
-# - Inadequate logging for debugging
+# - Memory leaks in long-running processes
+# - Connection pool exhaustion
+# - Improper error handling
+# - Missing database indexes
+# - Inadequate input validation
 ```
 
-### Database Specific Considerations
+### Risk Areas
 ```
-{{database_considerations}}
-# - Transaction management
-# - Migration rollback safety
-# - Index optimization
-# - Connection pool sizing
-# - Database-level constraints vs application-level
+{{risk_areas}}
+# - High-traffic endpoints
+# - Complex database queries
+# - Authentication flows
+# - File upload handling
+# - External service integration
+# - Concurrent operations
 ```
 
-## 🔄 Backend Execution Context
+## 🔄 Execution Context
 
-### Backend Dependencies
+### Backend Pre-requisites
 ```
-{{backend_dependencies}}
+{{backend_prerequisites}}
+# - Development environment setup
 # - Database server running
-# - Redis for caching (if used)
-# - Message broker for async tasks
-# - External API integrations
+# - Required dependencies installed
+# - Environment variables configured
+# - Access to external services
 ```
 
-### Development Setup
+### Development Tools Setup
 ```
-{{development_setup}}
-# python -m venv venv
-# source venv/bin/activate
-# pip install -r requirements.txt
-# alembic upgrade head
-# uvicorn src.main:app --reload
-```
-
-### Deployment Considerations
-```
-{{deployment_considerations}}
-# - Docker containerization
-# - Kubernetes deployment manifests
-# - Health check endpoints
-# - Environment-specific configuration
-# - Secret management
+{{development_tools}}
+# - IDE with Python/FastAPI support
+# - Database management tool
+# - API testing tool (Postman, Insomnia)
+# - Git for version control
+# - Docker for containerization
 ```
 
-## 📊 Backend Metrics
-
-### Backend Success Metrics
+### Iterative Development Process
 ```
-{{backend_metrics}}
-# - API response time p95 < 200ms
+{{iterative_process}}
+# 1. Implement API endpoint
+# 2. Write tests
+# 3. Add validation
+# 4. Implement business logic
+# 5. Test performance
+# 6. Document changes
+# 7. Code review
+```
+
+## 📊 Success Metrics
+
+### Backend Performance Metrics
+```
+{{performance_metrics}}
+# - Response time < 200ms (p95)
 # - Error rate < 0.1%
-# - Database query performance
-# - Memory and CPU usage
-# - Request throughput capacity
+# - CPU usage < 70%
+# - Memory usage < 80%
+# - Database query time < 100ms
 ```
 
-### Monitoring & Logging
+### Quality & Reliability Metrics
 ```
-{{monitoring_logging}}
-# - Structured JSON logging
-# - Request/response logging
-# - Error tracking integration
-# - Performance metrics collection
-# - Health check endpoints
+{{quality_metrics}}
+# - Test coverage > 80%
+# - Zero critical security issues
+# - Documentation coverage 100%
+# - API versioning maintained
+# - Successful CI/CD builds
 ```
 
 ---
-*PRP Backend Template - Especializado em desenvolvimento de APIs e serviços backend*
+*Backend PRP Template - Specialized in backend development with focus on performance, scalability, and maintainability*
