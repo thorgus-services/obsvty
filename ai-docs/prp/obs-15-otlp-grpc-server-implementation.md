@@ -1,35 +1,38 @@
-# 🚀 PRP - Backend Development (OTLP gRPC Server Implementation)
+# 🚀 PRP - Backend Development - OTLP gRPC Server Implementation
 
 ## 🏷️ Backend PRP Metadata
-- **PRP ID**: OTLP-GRPC-SRV-001
+- **PRP ID**: OTLP-GRPC-001
 - **Type**: Backend Development
-- **Domain**: Observability Infrastructure (OTLP/gRPC Server)  
+- **Domain**: Observability Infrastructure (OTLP/gRPC Server)
 - **Technology**: Python 3.11+/gRPC/opentelemetry-proto
-- **Complexity**: Medium
+- **Complexity**: medium
+- **Review Status**: ✅ DRAFT
 
 ## 🎯 Business Context Layer
 
 ### Backend Business Objectives
 ```
-"Implement a gRPC server that complies with the OTLP specification to receive observability data (traces and logs) using the official OpenTelemetry protocols, following Hexagonal Architecture principles with proper interfaces, use cases and dependency injection to ensure maintainability and extensibility while achieving < 100ms latency for trace ingestion and 100% success rate for valid OTLP requests."
+Implement a gRPC server that complies with the OTLP specification to receive observability data (traces) 
+using the official OpenTelemetry protocols, following the principles of Hexagonal Architecture and 
+Test-Driven Development. This provides a standard interface for receiving distributed tracing data 
+from OpenTelemetry instrumented applications.
 ```
 
 ### SLAs & Performance Requirements
-- **Availability**: 99.9% (development environment stability)  
-- **Latency**: < 100ms for requests with up to 100 spans
-- **Throughput**: Support up to 100 requests/second in development environment
-- **Scalability**: Modular design to support future horizontal scaling needs with thread-safe concurrent request handling
+- **Availability**: 99.9% (development environment stability)
+- **Latency**: < 100ms response time for OTLP requests under normal load
+- **Throughput**: Support up to 100 requests/second during testing
+- **Scalability**: Modular design to support future horizontal scaling needs
 
 ## 👥 Stakeholder Analysis
 
 ### Backend Stakeholders
 ```
-- Application Developers: Need to send telemetry without additional complexity
-- SRE Team: Depend on observability data for system monitoring
-- Backend Team: Require maintainable and extensible implementation
-- Solution Architects: Seek compliance with market standards
-- Security Team: Concerned with validation and secure handling of external inputs
-- DevOps Engineers: Need proper logging, monitoring hooks and graceful shutdown
+- Application Developers: Need standard OTLP endpoint for sending trace data
+- SRE Team: Require reliable trace ingestion with proper logging and monitoring
+- Backend Engineering: Need maintainable, extensible implementation following architecture patterns
+- Security Team: Concerned with input validation and network security
+- QA Team: Require comprehensive test coverage for reliable operation
 ```
 
 ## 📋 Backend Requirement Extraction
@@ -37,21 +40,17 @@
 ### API Endpoints Specification
 ```
 gRPC Service: opentelemetry.proto.collector.trace.v1.TraceService
-- Method: Export(ExportTraceServiceRequest) returns ExportTraceServiceResponse
-- Port: 4317 (standard OTLP/gRPC)
-- Protocol: gRPC following OTLP/v1 specification
-
-gRPC Service: opentelemetry.proto.collector.logs.v1.LogsService (optional)
-- Method: Export(ExportLogsServiceRequest) returns ExportLogsServiceResponse
-- Port: 4317 (standard OTLP/gRPC)
-- Protocol: gRPC following OTLP/v1 specification
+Method: Export(opentelemetry.proto.collector.trace.v1.ExportTraceServiceRequest)
+Response: ExportTraceServiceResponse with SUCCESS status
+Port: 4317 (standard OTLP/gRPC port)
+Optional: opentelemetry.proto.collector.logs.v1.LogsService for logs ingestion
 ```
 
 ### Data Models & Entities
 ```
 TraceSpan:
 - trace_id: str (hex-encoded)
-- span_id: str (hex-encoded) 
+- span_id: str (hex-encoded)
 - parent_span_id: Optional[str]
 - name: str
 - start_time_unix_nano: int
@@ -64,177 +63,178 @@ ObservabilityBuffer:
 - max_size: int
 - current_size: int
 - buffer: deque[TraceSpan]
-
-OTLPgRPCAdapter:
-- Implements: ObservabilityIngestionPort (typing.Protocol)
-- Location: src/obsvty/adapters/messaging/otlp_grpc.py
 ```
 
 ### Database Requirements
-- **DBMS**: N/A (temporary in-memory storage)
-- **Migrations**: N/A (initial implementation)  
-- **Indexes**: N/A (in-memory buffer)
-- **Constraints**: N/A (in-memory buffer)
+- **DBMS**: Not applicable (temporary in-memory buffer)
+- **Migrations**: Not applicable
+- **Indexes**: Not applicable
+- **Constraints**: Not applicable
 
 ## 🔧 Backend Technical Translation
 
 ### Architecture Pattern
 ```
-- Pattern: Ports & Adapters (Hexagonal Architecture)
-- Ports: Abstract interfaces (typing.Protocol) for all external dependencies
-- Adapters: gRPC server implementation following OTLP specification
-- Application Core: 
-  - domain/ - Value objects and domain models for observability
-  - ports/ - Abstract interfaces (typing.Protocol) for external interactions
-  - use_cases/ - Business logic for trace processing and buffer management
-- Composition Root: main.py for dependency injection and application wiring
-- Infrastructure: gRPC server configuration and environment settings
+- Pattern: Hexagonal Architecture (Ports & Adapters)
+- Ports: ObservabilityIngestionPort (typing.Protocol) in src/project_name/ports/messaging.py
+- Adapters: OTLPgRPCAdapter implementing the port in src/project_name/adapters/messaging/otlp_grpc.py
+- Use Cases: Trace processing logic in src/project_name/use_cases/
+- Models: Domain entities in src/project_name/domain/
+- Composition Root: Dependency injection in main.py
 ```
 
 ### Technology Stack Specifics
-- **Framework**: Python standard library + gRPC
+- **Framework**: gRPC with Python
 - **ORM/ODM**: Not applicable (in-memory buffer)
-- **Validation**: Pydantic for configuration validation and custom OTLP validation
-- **Authentication**: Optional headers support for future extension
+- **Validation**: Pydantic for configuration validation and custom validators for OTLP inputs
+- **Authentication**: Not applicable (initial implementation)
 
 ### API Design Specifications
 ```
 - OTLP/gRPC protocol compliance with v1 specification
-- Interface definitions following OpenTelemetry proto files
+- Interface definitions strictly following OpenTelemetry proto files
 - Clear separation between protocol implementation and business logic
-- Security-first design with input validation for external requests
-- Proper error handling returning appropriate OTLP status codes
-- Thread-safe handling of concurrent requests
+- Thread-safe buffer implementation for concurrent request handling
+- Proper error handling for malformed OTLP requests
 ```
 
 ### Performance Considerations
 ```
-- Memory management for trace buffer (MAX_BUFFER_SIZE configuration)
+- Memory management for trace buffer with configurable MAX_BUFFER_SIZE
 - Efficient protocol buffer serialization/deserialization
+- Concurrent request handling with thread-safe operations
 - Resource utilization monitoring hooks for future implementation
-- Configurable message size limits to handle large trace payloads
-- Performance metrics collection for ingestion rate and error rate
 ```
 
 ## 📝 Backend Specification Output
 
 ### Expected Backend Deliverables
 ```
-1. Complete gRPC server implementation in src/obsvty/adapters/messaging/otlp_grpc.py
-2. Port interface definition in src/obsvty/ports/messaging.py using typing.Protocol
-3. Domain entities for trace representation in src/obsvty/domain/observability.py
-4. Buffer management use case in src/obsvty/use_cases/buffer_management.py
-5. Main application configuration with dependency injection
-6. Environment configuration template (.env.example)  
-7. Unit tests for all service methods with >90% coverage
-8. Integration tests with real gRPC server validation
-9. Example OTLP client for testing purposes
-10. Updated documentation in README.md
+1. gRPC Service implementation following OTLP TraceService interface
+2. ObservabilityIngestionPort interface definition using typing.Protocol
+3. OTLPgRPCAdapter implementation connecting gRPC service to domain logic
+4. In-memory buffer with configurable size limits
+5. Comprehensive logging for debugging and monitoring
+6. Unit tests covering all service methods with >90% coverage
+7. Integration tests with real gRPC client/server interactions
+8. Configuration for host/port via environment variables
+9. Documentation for integration and testing
 ```
 
 ### Code Structure
 ```
 src/
-├── obsvty/
-│   ├── domain/
-│   │   └── observability.py          # TraceSpan and related domain models
-│   ├── ports/
-│   │   └── messaging.py              # ObservabilityIngestionPort protocol
-│   ├── use_cases/
-│   │   └── buffer_management.py      # Buffer management logic
-│   ├── adapters/
-│   │   └── messaging/
-│   │       ├── otlp_grpc.py          # OTLPgRPCAdapter implementation
-│   │       ├── proto/                # Official OTLP .proto files
-│   │       └── generated/            # Generated Python stubs
-│   └── main.py                       # Composition root and server initialization
+  └── project_name/
+      ├── domain/
+      │   └── observability.py          # Trace entities and value objects
+      ├── ports/
+      │   ├── __init__.py               # With __all__ exports
+      │   └── messaging.py              # ObservabilityIngestionPort interface
+      ├── use_cases/
+      │   ├── __init__.py               # With __all__ exports
+      │   └── process_trace.py          # Trace processing flow
+      ├── adapters/
+      │   └── messaging/
+      │       ├── __init__.py
+      │       ├── proto/                # Official OTLP .proto files
+      │       ├── generated/            # Generated Python stubs
+      │       └── otlp_grpc.py          # OTLPgRPCAdapter implementation
+      ├── main.py                       # Composition root and server initialization
+      ├── config.py                     # Configuration model with Pydantic
+      ├── __init__.py                   # Package initialization
+      └── __main__.py                   # Entry point
 tests/
-├── unit/
-│   ├── domain/
-│   ├── ports/
-│   ├── use_cases/
-│   └── adapters/
-└── integration/
-    └── adapters/
-        └── test_otlp_grpc.py
-examples/
-└── otlp_client.py                    # Example OTLP client for testing
+  ├── unit/
+  │   ├── domain/
+  │   ├── ports/
+  │   ├── use_cases/
+  │   └── adapters/
+  │       └── test_otlp_grpc.py         # Unit tests for gRPC adapter
+  └── integration/
+      └── adapters/
+          └── test_otlp_grpc.py         # Integration tests with real gRPC server
 ```
 
 ### Environment Configuration
 ```
-.env.example:
 OTLP_GRPC_HOST=0.0.0.0
 OTLP_GRPC_PORT=4317
 MAX_BUFFER_SIZE=10000
 LOG_LEVEL=INFO
-MAX_RECEIVE_MESSAGE_LENGTH=4194304  # 4MB
+GRPC_MAX_MESSAGE_LENGTH=4194304  # 4MB
 ```
 
 ## ✅ Backend Validation Framework
 
 ### Backend Testing Strategy
 ```
-- Unit tests for gRPC service methods with mocked dependencies
-- Integration tests with real gRPC server using testcontainers
-- Protocol compliance tests with official OTLP test data
-- Performance tests with concurrent requests
-- Error handling tests for malformed requests
-- Thread safety tests for concurrent buffer access
+TDD Approach (Red-Green-Refactor Cycle):
+- RED: Write failing unit tests for gRPC service methods before implementation
+- RED: Write failing tests for interface contract compliance for ports
+- RED: Write failing tests to verify proper request/response handling
+- RED: Write failing tests for buffer management and thread-safety
+- RED: Write failing tests to validate error handling for malformed requests
+- RED: Write failing integration tests with real gRPC client connections
+- GREEN: Implement minimal code to make tests pass
+- REFACTOR: Optimize and clean up implementation while keeping tests passing
+- REPEAT: Continue cycle for each new functionality
+
+Domain and Architecture Validation:
+- Contract tests for all port interfaces (testing Protocol compliance)
+- Unit tests for use cases with mocked ports (isolation testing)
+- Integration tests verifying gRPC server operation (end-to-end validation)
+- Error handling tests for edge cases (resilience validation)
+- Performance tests for load scenarios (scalability validation)
 ```
 
 ### Backend Quality Gates
 ```
-- Unit tests cover all service methods with >90% coverage
-- Integration tests verify server operation with real gRPC client
-- All tests pass without race conditions or memory leaks
-- MyPy type checking with strict mode
+- All unit tests must pass before merging
 - Ruff linting with zero warnings
+- MyPy type checking with strict mode
 - Dependency vulnerability scanning (safety check)
-- 100% success rate for valid OTLP requests
-- Latency < 100ms for typical requests
+- Coverage threshold of 90% for gRPC adapter code
+- Architecture validation ensuring DIP compliance
+- Security validation for all external inputs
 ```
 
 ### Security Requirements
 ```
-- Validation of incoming requests conforming to OTLP schema
-- Rate limiting to prevent resource exhaustion
+- Input validation for all OTLP request payloads
 - Proper error messages without sensitive information leakage
-- Input sanitization for all external data
-- Thread-safe handling of concurrent requests
-- Secure configuration with environment variables
+- Rate limiting to prevent abuse (future enhancement)
+- Message size limits to prevent memory exhaustion
+- No hardcoded credentials or secrets
 ```
 
 ### Performance Testing
 ```
-- Latency P95 < 100ms for requests with up to 50 spans
-- Throughput of minimum 100 requests/second
-- Memory usage monitoring during high load
-- Buffer size limits enforced correctly
-- Graceful degradation when limits are reached
+- Latency test: < 100ms response time for typical requests
+- Concurrency test: Handle multiple simultaneous requests
+- Buffer stress test: Test behavior when buffer reaches max size
+- Memory usage monitoring: Ensure no memory leaks
 ```
 
 ## ⚠️ Backend Known Gotchas
 
 ### Common Backend Pitfalls
 ```
-- Proto file version mismatch between library and specification
-- Thread safety issues in buffer management for concurrent requests
-- Memory exhaustion with large trace payloads
-- gRPC compilation issues across different platforms
-- Incorrect handling of OTLP request/response formats
-- Inadequate validation of external inputs leading to security issues
-- Race conditions in shared buffer access
+- Proto file version mismatch between library and .proto files
+- Thread-safety issues with concurrent gRPC requests
+- Buffer overflow under high load conditions
+- Memory leaks from accumulated trace data
+- Serialization/deserialization performance bottlenecks
+- Configuration management for different environments
 ```
 
 ### Risk Areas
 ```
-- Concurrent request handling and buffer management
-- Large payload processing and memory consumption
-- Protocol compliance with official OTLP specification
-- Performance under high request loads
-- Error handling for malformed OTLP data
-- Dependency management and version compatibility
+- gRPC server performance under high load
+- Memory usage with large trace payloads
+- Protocol compliance with OTLP specification
+- Network security for exposed gRPC port
+- Error handling for malformed OTLP requests
+- Test coverage for edge cases
 ```
 
 ## 🔄 Execution Context
@@ -242,55 +242,63 @@ MAX_RECEIVE_MESSAGE_LENGTH=4194304  # 4MB
 ### Backend Pre-requisites
 ```
 - Python 3.11+ installed
-- Poetry 1.7.0+ installed  
-- opentelemetry-proto==1.20.0, grpcio==1.59.0
-- Development environment with sufficient memory for testing
-- Docker for integration testing (optional but recommended)
+- Poetry 1.7.0+ installed
+- Basic development tools (git, curl, make)
+- Docker Engine 20.10+ (for integration tests)
+- OpenTelemetry proto files available locally
 ```
 
 ### Development Tools Setup
 ```
-- IDE with Python/gRPC support and type checking
+- VS Code with Python extension (recommended)
 - Protocol Buffer visualization tools (optional)
-- gRPC testing tools (grpcurl, BloomRPC)
-- Performance testing tools (wrk2, hey)
-- Memory profiling tools for performance analysis
+- gRPC testing tools (grpc_cli, BloomRPC)
+- Docker Desktop for consistent environment testing
 ```
 
-### Iterative Development Process
+### Iterative Development Process (TDD)
 ```
-1. Define port interface using typing.Protocol
-2. Write failing unit tests for gRPC service methods
-3. Implement basic gRPC service skeleton
-4. Add OTLP request/response handling
-5. Implement thread-safe buffer management
-6. Add comprehensive logging functionality
-7. Write integration tests with real gRPC server
-8. Add performance benchmarks and optimization
-9. Document the API and configuration
-10. Validate against official OTLP compliance tests
+TDD Cycle Implementation:
+1. RED: Write failing unit test for gRPC service interface contract
+2. GREEN: Implement minimal adapter interface to make test pass
+3. REFACTOR: Clean up code while keeping test passing
+4. RED: Write failing test for trace export functionality
+5. GREEN: Implement export method with basic functionality to make test pass
+6. REFACTOR: Optimize implementation while keeping test passing
+7. RED: Write failing test for buffer management functionality
+8. GREEN: Implement in-memory buffer with thread-safety to make test pass
+9. REFACTOR: Improve buffer implementation while keeping test passing
+10. RED: Write failing test for error handling scenarios
+11. GREEN: Implement proper error handling for malformed requests to make test pass
+12. REFACTOR: Enhance error handling while keeping test passing
+13. RED: Write failing test for server configuration functionality
+14. GREEN: Implement configurable host/port to make test pass
+15. REFACTOR: Optimize configuration while keeping test passing
+16. RED: Write failing integration tests with real gRPC client/server
+17. GREEN: Ensure integration tests pass
+18. REFACTOR: Optimize integration points while keeping tests passing
+19. Repeat TDD cycle for any additional features or improvements
 ```
 
 ## 📊 Success Metrics
 
 ### Backend Performance Metrics
 ```
-- Server responds to OTLP requests with < 100ms latency
-- Server handles concurrent requests without errors
+- Setup and startup time < 2 seconds
+- Average response time < 50ms for standard trace requests
+- Concurrent request handling without errors (100 simultaneous requests)
+- Memory usage remains stable under sustained load
 - 100% of valid OTLP requests return SUCCESS status
-- Memory usage remains stable under load
-- Buffer size limits enforced correctly
-- Throughput of at least 100 requests/second
 ```
 
 ### Quality & Reliability Metrics
 ```
-- Unit test coverage > 90% for gRPC implementation
-- Integration tests pass with real OTLP client
-- Zero critical security vulnerabilities
-- OTLP protocol compliance verified
-- Thread-safe operation under concurrent load
-- Proper error handling and logging
+- 90%+ test coverage for gRPC adapter code
+- Zero Ruff linting warnings
+- Zero MyPy type errors
+- Complete documentation coverage for public interfaces
+- Successful operation on all supported platforms (Linux, macOS)
+- All architectural constraints respected (DIP, hexagonal)
 ```
 
 ---
