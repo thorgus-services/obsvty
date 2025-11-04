@@ -8,6 +8,33 @@ are intentionally minimal to enforce decoupling from transport specifics.
 from __future__ import annotations
 
 from typing import Protocol, runtime_checkable, Sequence
+from opentelemetry.proto.collector.trace.v1.trace_service_pb2 import (
+    ExportTraceServiceRequest,
+    ExportTraceServiceResponse,
+)
+
+
+@runtime_checkable
+class ObservabilityIngestionPort(Protocol):
+    """Inbound port for OTLP trace ingestion following the official specification.
+
+    Adapters implementing the OTLP/gRPC protocol should use this interface to
+    deliver trace data to the application core. This aligns with the official
+    OpenTelemetry Protocol specification for trace collection.
+    """
+
+    def export_traces(
+        self, request: ExportTraceServiceRequest
+    ) -> ExportTraceServiceResponse:
+        """Export trace data following the OTLP specification.
+
+        Args:
+            request: ExportTraceServiceRequest containing trace data in OTLP format
+
+        Returns:
+            ExportTraceServiceResponse with status information
+        """
+        ...
 
 
 @runtime_checkable

@@ -196,4 +196,8 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+#stuffs
+ai-docs/code-review/
+ai-docs/tasks/
+
 # End of https://www.toptal.com/developers/gitignore/api/python,go

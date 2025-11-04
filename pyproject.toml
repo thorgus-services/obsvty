@@ -8,24 +8,26 @@ packages = [{ include = "obsvty", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "0.104.1"
-uvicorn = { version = "0.24.0", optional = true }
-pydantic = "2.5.0"
+fastapi = "0.115.4"
+uvicorn = { version = "0.32.1", optional = true }
+pydantic = "2.9.2"
 grpcio = "1.76.0"
 grpcio-tools = "1.76.0"
+grpcio-reflection = "1.76.0"
 python-dotenv = "1.2.1"
 protobuf = "6.33.0"
+pydantic-settings = "^2.11.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "7.4.3"
-pytest-cov = "4.1.0"
-ruff = "0.4.7"
-mypy = "1.10.0"
+pytest = "8.4.2"
+pytest-cov = "5.0.0"
+ruff = "0.8.6"
+mypy = "1.18.2"
 invoke = "2.2.0"
 factory-boy = "3.3.1"
-testcontainers = "4.3.1"
+testcontainers = "4.13.2"
 safety = "2.3.5"
-pre-commit = "3.7.0"
+pre-commit = "4.3.0"
 tomli = "2.0.1"
 
 [build-system]
@@ -50,6 +52,10 @@ module = [
     "google.protobuf.*",
     "grpc",
     "grpc.*",
+    "grpc_health",
+    "grpc_health.*",
+    "grpc_reflection",
+    "grpc_reflection.*",
     "dotenv",
     "dotenv.*",
 ]

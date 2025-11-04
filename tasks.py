@@ -25,6 +25,7 @@ def typecheck(c):
 def format_code(c):
     """Format code with ruff."""
     c.run("ruff format src tests")
+    c.run("ruff check --fix src tests")
 
 
 @task
