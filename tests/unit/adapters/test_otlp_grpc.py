@@ -12,7 +12,7 @@ from src.obsvty.ports import ObservabilityIngestionPort
 from src.obsvty.adapters.messaging.otlp_grpc import OTLPgRPCAdapter
 from src.obsvty.config import OTLPGRPCServerConfig
 from src.obsvty.use_cases import ProcessTraceUseCase
-from src.obsvty.domain import TraceSpan, TraceId, SpanId
+from src.obsvty.domain import TraceSpan, TraceId, SpanId, SpanStatus
 
 # Import the OTLP protobuf classes for testing
 from opentelemetry.proto.collector.trace.v1.trace_service_pb2 import (
@@ -139,15 +139,15 @@ class TestOTLPgRPCBufferManagement:
 
         # When: Adding a span to the buffer
         trace_span = TraceSpan(
-            trace_id=TraceId(value="test_trace_id"),
-            span_id=SpanId(value="test_span_id"),
+            trace_id=TraceId(value="12345678901234567890123456789012"),  # 32 hex chars
+            span_id=SpanId(value="1234567890123456"),  # 16 hex chars
             parent_span_id=None,
             name="test_span",
             start_time_unix_nano=0,
             end_time_unix_nano=1000,
             attributes={},
             events=[],
-            status=Mock(),
+            status=SpanStatus(code=0, message="OK"),  # Use proper status object
         )
 
         # Then: The span should be added successfully
@@ -164,15 +164,15 @@ class TestOTLPgRPCBufferManagement:
 
         # Add first span
         first_span = TraceSpan(
-            trace_id=TraceId(value="first_trace_id"),
-            span_id=SpanId(value="first_span_id"),
+            trace_id=TraceId(value="12345678901234567890123456789012"),  # 32 hex chars
+            span_id=SpanId(value="1234567890123456"),  # 16 hex chars
             parent_span_id=None,
             name="first_span",
             start_time_unix_nano=0,
             end_time_unix_nano=1000,
             attributes={},
             events=[],
-            status=Mock(),
+            status=SpanStatus(code=0, message="OK"),  # Use proper status object
         )
 
         # When: Adding a span to the full buffer
@@ -203,15 +203,15 @@ class TestOTLPgRPCBufferManagement:
 
         # When: Adding a span and checking status again
         trace_span = TraceSpan(
-            trace_id=TraceId(value="test_trace_id"),
-            span_id=SpanId(value="test_span_id"),
+            trace_id=TraceId(value="12345678901234567890123456789012"),  # 32 hex chars
+            span_id=SpanId(value="1234567890123456"),  # 16 hex chars
             parent_span_id=None,
             name="test_span",
             start_time_unix_nano=0,
             end_time_unix_nano=1000,
             attributes={},
             events=[],
-            status=Mock(),
+            status=SpanStatus(code=0, message="OK"),  # Use proper status object
         )
         adapter._buffer.add_span(trace_span)
         status = adapter.get_buffer_status()
@@ -230,15 +230,15 @@ class TestOTLPgRPCBufferManagement:
 
         # Add a span to the buffer
         trace_span = TraceSpan(
-            trace_id=TraceId(value="test_trace_id"),
-            span_id=SpanId(value="test_span_id"),
+            trace_id=TraceId(value="12345678901234567890123456789012"),  # 32 hex chars
+            span_id=SpanId(value="1234567890123456"),  # 16 hex chars
             parent_span_id=None,
             name="test_span",
             start_time_unix_nano=0,
             end_time_unix_nano=1000,
             attributes={},
             events=[],
-            status=Mock(),
+            status=SpanStatus(code=0, message="OK"),  # Use proper status object
         )
         adapter._buffer.add_span(trace_span)
 
