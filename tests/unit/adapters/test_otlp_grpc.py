@@ -4,8 +4,6 @@ These tests are written first to define the expected behavior of the
 OTLP gRPC adapter before implementing the actual functionality.
 """
 
-from __future__ import annotations
-
 from unittest.mock import Mock
 
 from src.obsvty.ports import ObservabilityIngestionPort

@@ -5,8 +5,6 @@ delegating persistence to the storage port. This is intentionally lean to
 enable iterative development guided by tests.
 """
 
-from __future__ import annotations
-
 from typing import Sequence
 
 from ..ports.storage import TraceStoragePort

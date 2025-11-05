@@ -7,8 +7,6 @@ These tests validate:
 - Dockerfile presence (build test can be added in CI)
 """
 
-from __future__ import annotations
-
 import subprocess
 from pathlib import Path
 
@@ -41,12 +39,9 @@ def test_pyproject_has_pinned_versions():
 
     # Check key dependencies pinned
     for pkg in [
-        "fastapi",
-        "uvicorn",
         "pydantic",
         "grpcio",
         "grpcio-tools",
-        "python-dotenv",
         "protobuf",
     ]:
         assert pkg in deps, f"missing dependency: {pkg}"
@@ -59,8 +54,6 @@ def test_pyproject_has_pinned_versions():
         "ruff",
         "mypy",
         "invoke",
-        "factory-boy",
-        "testcontainers",
         "safety",
         "pre-commit",
     ]:

@@ -17,7 +17,6 @@ Environment:
   OTLP_PROTO_REF: optional, branch/tag to fetch (default: main)
 """
 
-from __future__ import annotations
 
 import argparse
 import io

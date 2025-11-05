@@ -1,7 +1,5 @@
 """Module entrypoint for ``python -m obsvty``."""
 
-from __future__ import annotations
-
 from .main import main
 
 

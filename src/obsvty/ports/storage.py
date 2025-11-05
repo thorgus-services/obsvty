@@ -4,8 +4,6 @@ Adapters implementing durable storage (e.g., DuckDB, files, other DBs)
 must satisfy these protocol interfaces to be used by the application core.
 """
 
-from __future__ import annotations
-
 from typing import Protocol, runtime_checkable, Sequence
 
 

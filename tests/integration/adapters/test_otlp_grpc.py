@@ -4,8 +4,6 @@ These tests verify the complete flow from gRPC client request to server response
 validating that the OTLP gRPC adapter integrates properly with the gRPC framework.
 """
 
-from __future__ import annotations
-
 import threading
 import time
 from typing import Generator

@@ -5,8 +5,6 @@ implement to deliver telemetry data into the application core. These ports
 are intentionally minimal to enforce decoupling from transport specifics.
 """
 
-from __future__ import annotations
-
 from typing import Protocol, runtime_checkable, Sequence
 from opentelemetry.proto.collector.trace.v1.trace_service_pb2 import (
     ExportTraceServiceRequest,

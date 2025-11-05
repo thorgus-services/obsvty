@@ -1,29 +1,11 @@
-"""Configuration model for OTLP gRPC endpoint settings.
-
-This module defines the OtlpGrpcSettings model with environment variable support
-following the principles of Hexagonal Architecture and Test-Driven Development,
-allowing developers to connect their OTLP clients efficiently with proper
-configuration management and validation.
-"""
-
-from __future__ import annotations
+"""Configuration model for OTLP gRPC endpoint settings."""
 
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class OtlpGrpcSettings(BaseSettings):
-    """Configuration model for OTLP gRPC server settings following PRP requirements.
-
-    This class follows the specification from the PRP with the exact fields needed
-    for OTLP client connection, using the naming conventions and validation requirements.
-
-    Attributes:
-        host: The host address for the gRPC server to bind to (default: "localhost")
-        port: The port number for the gRPC server (default: 4317 for OTLP)
-        max_message_length: Maximum message size in bytes that the server will accept
-        buffer_max_size: Maximum size of the trace buffer
-    """
+    """Configuration model for OTLP gRPC server settings."""
 
     host: str = "localhost"
     port: int = 4317
@@ -61,11 +43,7 @@ class OtlpGrpcSettings(BaseSettings):
 
 
 class OTLPGRPCServerConfig(BaseSettings):
-    """Backward compatibility configuration model for existing implementation.
-
-    This class maintains compatibility with the existing adapter implementation
-    while providing the functionality required by the PRP.
-    """
+    """Backward compatibility configuration model for existing implementation."""
 
     model_config = SettingsConfigDict(
         env_prefix="OTLP_GRPC_",
@@ -98,59 +76,22 @@ class OTLPGRPCServerConfig(BaseSettings):
 
 
 def load_grpc_settings() -> OtlpGrpcSettings:
-    """Load gRPC settings from environment variables using PRP specifications.
-
-    This function loads the OTLP gRPC server configuration from environment
-    variables following the Hexagonal Architecture principles, with proper
-    validation and error handling as specified in the PRP.
-
-    Returns:
-        OtlpGrpcSettings: Validated configuration instance loaded from environment
-
-    Example:
-        settings = load_grpc_settings()
-        server = configure_grpc_server(settings)
-    """
+    """Load gRPC settings from environment variables."""
     return OtlpGrpcSettings()
 
 
 def load_otlp_grpc_config() -> OTLPGRPCServerConfig:
-    """Load OTLP gRPC configuration from environment variables (backward compatibility).
-
-    This function maintains compatibility with existing code while providing
-    the new configuration model as well.
-
-    Returns:
-        OTLPGRPCServerConfig: Validated configuration instance for existing adapter
-    """
+    """Load OTLP gRPC configuration from environment variables (backward compatibility)."""
     return OTLPGRPCServerConfig()
 
 
 def validate_settings(settings: OtlpGrpcSettings) -> bool:
-    """Validate configuration settings before server startup.
-
-    This function performs additional validation of the configuration settings
-    beyond what Pydantic provides, ensuring the configuration is safe and
-    appropriate for server startup.
-
-    Args:
-        settings: The configuration settings to validate
-
-    Returns:
-        True if all validations pass, False otherwise
-    """
+    """Validate configuration settings before server startup."""
     # All validation is handled by Pydantic during instantiation
     # If we get here, the settings are valid
     return True
 
 
 def get_server_endpoint(settings: OtlpGrpcSettings) -> str:
-    """Get the server endpoint string from settings.
-
-    Args:
-        settings: The configuration settings
-
-    Returns:
-        str: The server endpoint in host:port format
-    """
+    """Get the server endpoint string from settings."""
     return f"{settings.host}:{settings.port}"
