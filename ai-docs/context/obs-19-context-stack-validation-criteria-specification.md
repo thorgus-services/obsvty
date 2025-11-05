@@ -7,6 +7,9 @@
 - **Domain**: Observability and Distributed Systems Monitoring
 - **Task Type**: Implementation of Validation and Acceptance Criteria for OTLP gRPC Endpoint
 
+## 🛠️ Development Instructions
+Before submitting your implementation, run `inv dev` to perform all checks including linting, testing, and type checking.
+
 ## 🎯 System Context Layer
 *Defines the AI's "personality" and boundaries*
 

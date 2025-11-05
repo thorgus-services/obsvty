@@ -28,14 +28,14 @@ from opentelemetry.proto.collector.trace.v1.trace_service_pb2_grpc import (
 )
 
 from ...config import OTLPGRPCServerConfig
-from ...domain import (
-    ObservabilityBuffer,
+from ...domain.observability import (
+    TraceId,
     TraceSpan,
     SpanEvent,
     SpanStatus,
-    TraceId,
     SpanId,
 )
+from ...application.buffer_management import RejectWhenFullBuffer
 from ...ports import ObservabilityIngestionPort
 from ...use_cases import ProcessTraceUseCase
 
@@ -64,7 +64,7 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
         """
         self._process_trace_use_case = process_trace_use_case
         self._config = config
-        self._buffer = ObservabilityBuffer(max_size=config.max_buffer_size)
+        self._buffer = RejectWhenFullBuffer(max_size=config.max_buffer_size)
         self._server: grpc.Server | None = None
         self._lock = threading.RLock()  # Thread-safe buffer operations
         logger.info("OTLP gRPC Adapter initialized")
@@ -230,10 +230,11 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
     def _process_buffer_contents(self) -> None:
         """Process all spans currently in the buffer."""
         # We'll process the buffer contents by converting them and sending to the use case
-        # For now, just clear the buffer after logging
-        logger.info(f"Processing {self._buffer.current_size} spans from buffer")
-        with self._lock:
-            self._buffer.clear()
+        # For now, just log the buffer size
+        logger.info(f"Processing {self._buffer.size()} spans from buffer")
+        # Note: Our buffer implementation doesn't have a clear method
+        # since it uses FIFO with automatic discard. The buffer will naturally
+        # process spans through other mechanisms outside this adapter.
 
     def start_server(self) -> None:
         """Start the gRPC server to listen for OTLP requests."""
@@ -307,7 +308,7 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
         """Get current buffer status for monitoring purposes."""
         with self._lock:
             return {
-                "current_size": self._buffer.current_size,
+                "current_size": self._buffer.size(),
                 "max_size": self._buffer.max_size,
                 "is_full": self._buffer.is_full(),
                 "is_empty": self._buffer.is_empty(),

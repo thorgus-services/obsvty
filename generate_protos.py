@@ -24,7 +24,6 @@ import io
 import logging
 import os
 import shutil
-import sys
 import tempfile
 from pathlib import Path
 import re
@@ -168,7 +167,7 @@ def main() -> int:
         return 0
 
     with tempfile.TemporaryDirectory() as td:
-        temp_dir = Path(td)
+        Path(td)
         zip_bytes = _download_zip(args.ref, timeout=args.timeout)
         # Reset proto dir before copying to avoid stale files
         _reset_dir(proto_dir)

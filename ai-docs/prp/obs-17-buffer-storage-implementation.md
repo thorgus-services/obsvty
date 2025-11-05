@@ -8,6 +8,9 @@
 - **Complexity**: medium
 - **Review Status**: ✅ DRAFT
 
+## 🛠️ Development Instructions
+Before submitting your implementation, run `inv dev` to perform all checks including linting, testing, and type checking.
+
 ## 🎯 Business Context Layer
 
 ### Backend Business Objectives

@@ -6,19 +6,27 @@ that adapters depend on, but never depend on any infrastructure details.
 """
 
 from .observability import (
-    ObservabilityBuffer,
     SpanEvent,
     SpanId,
     SpanStatus,
     TraceId,
     TraceSpan,
+    ProcessedSpan,
+    validate_attributes_format,
+    validate_scope_spans_structure,
+    validate_span_structure,
+    validate_span_id_format,
 )
 
 __all__ = [
-    "ObservabilityBuffer",
     "SpanEvent",
     "SpanId",
     "SpanStatus",
     "TraceId",
     "TraceSpan",
+    "ProcessedSpan",
+    "validate_attributes_format",
+    "validate_scope_spans_structure",
+    "validate_span_structure",
+    "validate_span_id_format",
 ]
