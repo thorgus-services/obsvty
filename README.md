@@ -137,11 +137,59 @@ python generate_protos.py --ref v1.1.0 --timeout 20 --force
 ### Environment configuration
 Copy `.env.example` to `.env` and adjust values if needed:
 ```env
+# Main OTLP configuration (new standard)
+OTLP_HOST=localhost
+OTLP_PORT=4317
+OTLP_MAX_MESSAGE_LENGTH=4194304
+OTLP_BUFFER_MAX_SIZE=1000
+
+# Backward compatibility (existing implementation)
 OTLP_GRPC_HOST=0.0.0.0
 OTLP_GRPC_PORT=4317
-MAX_BUFFER_SIZE=10000
+OTLP_GRPC_MAX_BUFFER_SIZE=10000
+OTLP_GRPC_MAX_MESSAGE_LENGTH=4194304
+OTLP_GRPC_ENABLE_REFLECTION=false
+OTLP_GRPC_ENABLE_LOGS_SERVICE=false
+
 LOG_LEVEL=INFO
 ```
+
+### Configuration Model
+The project uses `OtlpGrpcSettings` Pydantic model for validated configuration management:
+
+- `OTLP_HOST`: Host address for the gRPC server (default: "localhost")
+- `OTLP_PORT`: Port number for the gRPC server (default: 4317)
+- `OTLP_MAX_MESSAGE_LENGTH`: Maximum message size in bytes (default: 4MB)
+- `OTLP_BUFFER_MAX_SIZE`: Maximum size of the trace buffer (default: 1000)
+
+### Running the OTLP Server
+To start the OTLP gRPC server:
+```bash
+python -m obsvty
+```
+
+The server will load configuration from environment variables and start on the configured endpoint.
+
+### Connecting OTLP Clients
+To connect your own OTLP client to the server, ensure environment variables are set:
+
+```python
+import os
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+
+# Read from environment variables
+host = os.getenv("OTLP_HOST", "localhost")
+port = os.getenv("OTLP_PORT", "4317")
+endpoint = f"{host}:{port}"
+
+# Create the exporter
+otlp_exporter = OTLPSpanExporter(
+    endpoint=endpoint,
+    insecure=True,  # For development
+)
+```
+
+For a complete example, see `examples/otlp_client.py`.
 
 ### Architecture primitives (Ports & Use Cases)
 - Ports (in `src/obsvty/ports/`): `TraceIngestionPort`, `TraceBatchIngestionPort`, `TraceStoragePort`
