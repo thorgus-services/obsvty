@@ -5,7 +5,7 @@ from ..domain.observability import TraceSpan
 
 
 class TraceBufferPort(Protocol):
-    """Interface for trace buffer operations following Hexagonal Architecture."""
+    """Interface for trace buffer operations."""
 
     def add_span(self, trace_span: TraceSpan) -> bool:
         """Add a span to the buffer, returning True if successful, False if discarded."""

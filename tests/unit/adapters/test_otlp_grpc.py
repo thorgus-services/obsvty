@@ -8,7 +8,7 @@ from unittest.mock import Mock
 
 from src.obsvty.ports import ObservabilityIngestionPort
 from src.obsvty.adapters.messaging.otlp_grpc import OTLPgRPCAdapter
-from src.obsvty.config import OTLPGRPCServerConfig
+from src.obsvty.config import OtlpGrpcSettings
 from src.obsvty.use_cases import ProcessTraceUseCase
 from src.obsvty.domain import TraceSpan, TraceId, SpanId, SpanStatus
 
@@ -27,7 +27,7 @@ class TestOTLPgRPCAdapterContract:
         """Verifies if implementation complies with DIP and architectural boundaries."""
         # Given: A mock use case and configuration
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
 
         # When: Creating the adapter instance
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
@@ -39,7 +39,7 @@ class TestOTLPgRPCAdapterContract:
         """Verifies if the export_traces method exists and is properly defined."""
         # Given: A mock use case and configuration
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
 
         # When: Creating the adapter instance
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
@@ -52,7 +52,7 @@ class TestOTLPgRPCAdapterContract:
         """Verifies if export_traces method accepts proper OTLP request and returns response."""
         # Given: A mock use case, configuration, and a sample request
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         sample_request = ExportTraceServiceRequest()
 
         # When: Creating the adapter and calling export_traces
@@ -66,7 +66,7 @@ class TestOTLPgRPCAdapterContract:
         """Verifies if gRPC adapter correctly processes ExportTraceServiceRequest messages."""
         # Given: A mock use case and configuration
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
 
         # When: Creating the adapter and processing a trace request
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
@@ -81,7 +81,7 @@ class TestOTLPgRPCAdapterContract:
         """Verifies if service returns proper ExportTraceServiceResponse with SUCCESS status."""
         # Given: A mock use case and configuration
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
 
         # When: Creating the adapter and calling export_traces
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
@@ -101,7 +101,7 @@ class TestOTLPgRPCAdapterImplementation:
         """Verifies that adapter constructor requires proper dependencies."""
         # Given: Mock dependencies
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
 
         # When: Creating an adapter instance
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
@@ -114,7 +114,7 @@ class TestOTLPgRPCAdapterImplementation:
         """Verifies that adapter creates buffer with size from configuration."""
         # Given: Mock dependencies and config with specific buffer size
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig(max_buffer_size=5000)
+        config = OtlpGrpcSettings(max_buffer_size=5000)
 
         # When: Creating an adapter instance
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
@@ -132,7 +132,7 @@ class TestOTLPgRPCBufferManagement:
         """Verifies that spans can be added to the buffer."""
         # Given: An adapter with a small buffer
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig(max_buffer_size=2)
+        config = OtlpGrpcSettings(max_buffer_size=2)
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # When: Adding a span to the buffer
@@ -157,7 +157,7 @@ class TestOTLPgRPCBufferManagement:
         """Verifies that buffer prevents adding beyond max size."""
         # Given: An adapter with a small buffer
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig(max_buffer_size=1)
+        config = OtlpGrpcSettings(max_buffer_size=1)
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Add first span
@@ -187,7 +187,7 @@ class TestOTLPgRPCBufferManagement:
         """Verifies that buffer status method returns correct information."""
         # Given: An adapter with a buffer
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig(max_buffer_size=10)
+        config = OtlpGrpcSettings(max_buffer_size=10)
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # When: Getting buffer status on empty buffer
@@ -223,7 +223,7 @@ class TestOTLPgRPCBufferManagement:
         """Verifies that buffer clear method works correctly."""
         # Given: An adapter with a buffer containing spans
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig(max_buffer_size=10)
+        config = OtlpGrpcSettings(max_buffer_size=10)
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Add a span to the buffer
@@ -253,7 +253,7 @@ class TestOTLPgRPCAdapterErrorHandling:
         mock_use_case = Mock(spec=ProcessTraceUseCase)
         mock_use_case.run.side_effect = Exception("Processing error")
 
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a request with content to trigger processing
@@ -275,7 +275,7 @@ class TestOTLPgRPCAdapterErrorHandling:
         mock_use_case = Mock(spec=ProcessTraceUseCase)
         mock_use_case.run.side_effect = Exception("Processing error")
 
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a request with actual spans to trigger processing
@@ -330,7 +330,7 @@ class TestOTLPgRPCAdapterErrorHandling:
         # Given: An adapter with a working use case
         mock_use_case = Mock(spec=ProcessTraceUseCase)
 
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a request with multiple resource spans
@@ -413,7 +413,7 @@ class TestOTLPgRPCAdapterErrorHandling:
         # Given: An adapter where the conversion method throws an exception
         mock_use_case = Mock(spec=ProcessTraceUseCase)
 
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Mock the _create_trace_span_from_otlp to throw an exception
@@ -479,7 +479,7 @@ class TestOTLPgRPCAdapterErrorHandling:
         mock_use_case = Mock(spec=ProcessTraceUseCase)
         mock_use_case.run.side_effect = Exception("Processing error")
 
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a request with content to trigger processing
@@ -500,7 +500,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that attribute values are extracted correctly for string values."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock AnyValue with string value
@@ -518,7 +518,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that attribute values are extracted correctly for bool values."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock AnyValue with bool value
@@ -536,7 +536,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that attribute values are extracted correctly for int values."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock AnyValue with int value
@@ -554,7 +554,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that attribute values are extracted correctly for double values."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock AnyValue with double value
@@ -572,7 +572,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that attribute values are extracted correctly for bytes values."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock AnyValue with bytes value
@@ -590,7 +590,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that attribute values return None when no field is present."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock AnyValue with no fields
@@ -608,7 +608,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that nanoseconds are properly converted to datetime."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Use a known timestamp (seconds since epoch) with nanosecond precision
@@ -632,7 +632,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that OTLP spans are properly converted to domain TraceSpans."""
         # Given: An adapter instance and a mock OTLP span
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock OTLP span using protobuf message
@@ -678,7 +678,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that OTLP spans without parent span ID are properly converted."""
         # Given: An adapter instance and a mock OTLP span without parent
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock OTLP span without parent using protobuf message
@@ -712,7 +712,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that OTLP spans with status messages are properly converted."""
         # Given: An adapter instance and a mock OTLP span with status message
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock OTLP span with status message using protobuf message
@@ -750,7 +750,7 @@ class TestOTLPgRPCAdapterConversionMethods:
         """Verifies that OTLP spans with all attribute types are properly converted."""
         # Given: An adapter instance and a mock OTLP span with all attribute types
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Create a mock OTLP span with all types of attributes
@@ -804,7 +804,7 @@ class TestOTLPgRPCServerOperations:
         """Verifies that the start_server method exists."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Then: The adapter should have the start_server method
@@ -815,7 +815,7 @@ class TestOTLPgRPCServerOperations:
         """Verifies that the stop_server method exists."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Then: The adapter should have the stop_server method
@@ -826,7 +826,7 @@ class TestOTLPgRPCServerOperations:
         """Verifies that the serve_forever method exists."""
         # Given: An adapter instance
         mock_use_case = Mock(spec=ProcessTraceUseCase)
-        config = OTLPGRPCServerConfig()
+        config = OtlpGrpcSettings()
         adapter = OTLPgRPCAdapter(process_trace_use_case=mock_use_case, config=config)
 
         # Then: The adapter should have the serve_forever method

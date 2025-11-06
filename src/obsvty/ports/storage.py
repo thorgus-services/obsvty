@@ -1,8 +1,4 @@
-"""Storage ports for trace persistence.
-
-Adapters implementing durable storage (e.g., DuckDB, files, other DBs)
-must satisfy these protocol interfaces to be used by the application core.
-"""
+"""Storage ports for trace persistence."""
 
 from typing import Protocol, runtime_checkable, Sequence
 

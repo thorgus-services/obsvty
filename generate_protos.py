@@ -17,7 +17,6 @@ Environment:
   OTLP_PROTO_REF: optional, branch/tag to fetch (default: main)
 """
 
-
 import argparse
 import io
 import logging
@@ -54,7 +53,9 @@ def _download_zip(ref: str, timeout: float) -> bytes:
     for url in urls:
         try:
             LOGGER.info(f"Downloading archive: {url}")
-            req = urllib.request.Request(url, headers={"User-Agent": "obsvty-proto-fetch/1.0"})
+            req = urllib.request.Request(
+                url, headers={"User-Agent": "obsvty-proto-fetch/1.0"}
+            )
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 length = r.getheader("Content-Length")
                 if length is not None and int(length) > MAX_ZIP_BYTES:
@@ -64,7 +65,9 @@ def _download_zip(ref: str, timeout: float) -> bytes:
                     raise RuntimeError("Archive exceeded max size; aborting")
                 # Basic zip signature check; full validation happens on ZipFile open
                 if not data.startswith(b"PK"):
-                    raise RuntimeError("Downloaded file does not look like a ZIP archive")
+                    raise RuntimeError(
+                        "Downloaded file does not look like a ZIP archive"
+                    )
                 return data
         except Exception as e:  # noqa: BLE001 - we log and retry
             last_err = e
@@ -148,9 +151,17 @@ def _generate_stubs(proto_dir: Path, generated_dir: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate OTLP gRPC stubs")
-    parser.add_argument("--ref", default=os.getenv("OTLP_PROTO_REF", "main"), help="Branch or tag to fetch")
-    parser.add_argument("--force", action="store_true", help="Force re-download and regeneration")
-    parser.add_argument("--timeout", type=float, default=20.0, help="Network timeout (seconds)")
+    parser.add_argument(
+        "--ref",
+        default=os.getenv("OTLP_PROTO_REF", "main"),
+        help="Branch or tag to fetch",
+    )
+    parser.add_argument(
+        "--force", action="store_true", help="Force re-download and regeneration"
+    )
+    parser.add_argument(
+        "--timeout", type=float, default=20.0, help="Network timeout (seconds)"
+    )
     args = parser.parse_args()
 
     project_root = Path(__file__).parent

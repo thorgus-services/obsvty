@@ -1,4 +1,5 @@
 """Development tasks for the obsvty project."""
+
 from invoke import task
 
 

@@ -199,5 +199,6 @@ pyrightconfig.json
 #stuffs
 ai-docs/code-review/
 ai-docs/tasks/
+.vscode/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,go

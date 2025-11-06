@@ -1,9 +1,4 @@
-"""Minimal OTLP trace processing use case.
-
-Implements the orchestration logic for handling incoming trace payloads and
-delegating persistence to the storage port. This is intentionally lean to
-enable iterative development guided by tests.
-"""
+"""OTLP trace processing use case."""
 
 from typing import Sequence
 

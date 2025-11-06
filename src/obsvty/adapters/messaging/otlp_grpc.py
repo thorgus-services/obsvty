@@ -21,7 +21,7 @@ from opentelemetry.proto.collector.trace.v1.trace_service_pb2_grpc import (
     add_TraceServiceServicer_to_server,
 )
 
-from ...config import OTLPGRPCServerConfig, OtlpGrpcSettings
+from ...config import OtlpGrpcSettings
 from ...domain.observability import (
     TraceId,
     TraceSpan,
@@ -38,24 +38,15 @@ logger = logging.getLogger(__name__)
 
 
 class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
-    """Adapter implementing the OTLP gRPC TraceService interface."""
-
     def __init__(
         self,
         process_trace_use_case: ProcessTraceUseCase,
-        config: OTLPGRPCServerConfig | OtlpGrpcSettings,  # Support both config types
+        config: OtlpGrpcSettings,
     ):
         self._process_trace_use_case = process_trace_use_case
         self._config = config
 
-        # Handle both config types: new config uses buffer_max_size, old uses max_buffer_size
-        if hasattr(config, "buffer_max_size"):
-            buffer_size = config.buffer_max_size
-        elif hasattr(config, "max_buffer_size"):
-            buffer_size = config.max_buffer_size
-        else:
-            # Default value if neither attribute exists
-            buffer_size = 1000
+        buffer_size = getattr(config, "max_buffer_size", 1000)
 
         self._buffer = RejectWhenFullBuffer(max_size=buffer_size)
 
@@ -66,28 +57,12 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
     def Export(
         self, request: ExportTraceServiceRequest, context: grpc.ServicerContext
     ) -> ExportTraceServiceResponse:
-        """Export trace data following the OTLP specification."""
         logger.debug(
             f"Received OTLP trace export request with {len(request.resource_spans)} resource spans"
         )
 
         try:
-            for resource_span in request.resource_spans:
-                for scope_span in resource_span.scope_spans:
-                    for span in scope_span.spans:
-                        with self._lock:
-                            trace_span = self._create_trace_span_from_otlp(span)
-
-                            if not self._buffer.add_span(trace_span):
-                                logger.warning(
-                                    "Trace buffer is full, processing immediately"
-                                )
-                                self._process_buffer_contents()
-                                self._buffer.add_span(trace_span)
-
-                        trace_bytes = request.SerializeToString()
-                        self._process_trace_use_case.run(trace_bytes)
-
+            self._process_trace_request(request)
             response = ExportTraceServiceResponse()
             logger.info(
                 f"Successfully processed OTLP trace export request with {len(request.resource_spans)} resource spans"
@@ -98,18 +73,39 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
             logger.error(
                 f"Error processing OTLP trace export request: {str(e)}", exc_info=True
             )
-            response = ExportTraceServiceResponse()
-            return response
+            return ExportTraceServiceResponse()
 
     def export_traces(
         self, request: ExportTraceServiceRequest
     ) -> ExportTraceServiceResponse:
-        """Export trace data for port interface compliance."""
         mock_context = Mock(spec=grpc.ServicerContext)
         return self.Export(request, mock_context)
 
+    def _process_trace_request(self, request: ExportTraceServiceRequest) -> None:
+        self._process_resource_spans(request.resource_spans)
+        trace_bytes = request.SerializeToString()
+        self._process_trace_use_case.run(trace_bytes)
+
+    def _process_resource_spans(self, resource_spans: Any) -> None:
+        for resource_span in resource_spans:
+            self._process_scope_spans(resource_span.scope_spans)
+
+    def _process_scope_spans(self, scope_spans: Any) -> None:
+        for scope_span in scope_spans:
+            self._process_spans(scope_span.spans)
+
+    def _process_spans(self, spans: Any) -> None:
+        for span in spans:
+            trace_span = self._create_trace_span_from_otlp(span)
+            self._handle_span_buffering(trace_span)
+
+    def _handle_span_buffering(self, trace_span: TraceSpan) -> None:
+        with self._lock:
+            if not self._buffer.add_span(trace_span):
+                logger.warning("Trace buffer is full, processing immediately")
+                self._process_buffer_contents()
+
     def _create_trace_span_from_otlp(self, otlp_span: Any) -> TraceSpan:
-        """Convert an OTLP span to a domain TraceSpan object."""
         trace_id = TraceId(value=otlp_span.trace_id.hex())
         span_id = SpanId(value=otlp_span.span_id.hex())
         parent_span_id = (
@@ -118,23 +114,8 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
             else None
         )
 
-        attributes = {}
-        for attr in otlp_span.attributes:
-            attributes[attr.key] = self._extract_attribute_value(attr.value)
-
-        events = []
-        for event in otlp_span.events:
-            event_attrs = {}
-            for attr in event.attributes:
-                event_attrs[attr.key] = self._extract_attribute_value(attr.value)
-
-            span_event = SpanEvent(
-                name=event.name,
-                timestamp=self._nanos_to_datetime(event.time_unix_nano),
-                attributes=event_attrs,
-            )
-            events.append(span_event)
-
+        attributes = self._extract_attributes(otlp_span.attributes)
+        events = self._extract_events(otlp_span.events)
         status = SpanStatus(
             code=otlp_span.status.code,
             message=otlp_span.status.message if otlp_span.status.message else None,
@@ -153,8 +134,28 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
             kind=otlp_span.kind,
         )
 
+    def _extract_attributes(self, attributes: Any) -> dict[str, Any]:
+        result = {}
+        for attr in attributes:
+            result[attr.key] = self._extract_attribute_value(attr.value)
+        return result
+
+    def _extract_events(self, events: Any) -> list[SpanEvent]:
+        result = []
+        for event in events:
+            event_attrs = {}
+            for attr in event.attributes:
+                event_attrs[attr.key] = self._extract_attribute_value(attr.value)
+
+            span_event = SpanEvent(
+                name=event.name,
+                timestamp=self._nanos_to_datetime(event.time_unix_nano),
+                attributes=event_attrs,
+            )
+            result.append(span_event)
+        return result
+
     def _extract_attribute_value(self, any_value: Any) -> Any:
-        """Extract the value from an OTLP AnyValue message."""
         if any_value.HasField("string_value"):
             return any_value.string_value
         elif any_value.HasField("bool_value"):
@@ -169,17 +170,14 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
             return None
 
     def _nanos_to_datetime(self, nanos: int) -> datetime:
-        """Convert Unix nanoseconds to datetime."""
         seconds = nanos // 1_000_000_000
         micros = (nanos % 1_000_000_000) // 1000
         return datetime.fromtimestamp(seconds).replace(microsecond=micros)
 
     def _process_buffer_contents(self) -> None:
-        """Process all spans currently in the buffer."""
         logger.info(f"Processing {self._buffer.size()} spans from buffer")
 
     def start_server(self) -> None:
-        """Start the gRPC server to listen for OTLP requests."""
         logger.info(
             f"Starting OTLP gRPC server on {self._config.host}:{self._config.port}"
         )
@@ -203,11 +201,7 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
             self._health_servicer, self._server
         )
 
-        # Enable reflection for debugging tools if configured (only available in old config)
-        if (
-            hasattr(self._config, "enable_reflection")
-            and self._config.enable_reflection
-        ):
+        if self._config.enable_reflection:
             logger.info("Enabling gRPC server reflection")
             reflection.enable_server_reflection(
                 service_names=(
@@ -225,24 +219,18 @@ class OTLPgRPCAdapter(ObservabilityIngestionPort, TraceServiceServicer):
         logger.info(f"OTLP gRPC server started on {server_address}")
 
     def stop_server(self) -> None:
-        """Stop the gRPC server gracefully."""
         if self._server:
             logger.info("Stopping OTLP gRPC server gracefully...")
-            if hasattr(self, "_health_servicer"):
-                self._health_servicer.set(
-                    "", health_pb2.HealthCheckResponse.NOT_SERVING
-                )
+            self._health_servicer.set("", health_pb2.HealthCheckResponse.NOT_SERVING)
             self._server.stop(grace=5.0)
             logger.info("OTLP gRPC server stopped")
 
     def serve_forever(self) -> None:
-        """Block until the server stops."""
         if self._server:
             logger.info("Server running indefinitely...")
             self._server.wait_for_termination()
 
     def get_buffer_status(self) -> dict[str, Any]:
-        """Get current buffer status for monitoring purposes."""
         with self._lock:
             return {
                 "current_size": self._buffer.size(),

@@ -29,7 +29,7 @@ from unittest.mock import Mock
 
 
 from src.obsvty.adapters.messaging.otlp_grpc import OTLPgRPCAdapter
-from src.obsvty.config import OTLPGRPCServerConfig
+from src.obsvty.config import OtlpGrpcSettings
 from src.obsvty.use_cases import ProcessTraceUseCase
 
 
@@ -37,7 +37,7 @@ from src.obsvty.use_cases import ProcessTraceUseCase
 def grpc_server() -> Generator[tuple[str, OTLPgRPCAdapter], None, None]:
     """Start a gRPC server for testing and yield the connection details."""
     # Configuration for test server
-    config = OTLPGRPCServerConfig(
+    config = OtlpGrpcSettings(
         host="localhost",
         port=50052,  # Use a test port
         max_buffer_size=100,
