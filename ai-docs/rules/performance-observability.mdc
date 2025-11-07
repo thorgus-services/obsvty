@@ -1,0 +1,58 @@
+---
+description: "Performance optimization for high-volume observability data"
+alwaysApply: true
+---
+# Performance for Observability
+
+## Optimization Principles
+✅ **Only optimize after measuring:**
+```bash
+# Profiling command for trace processing
+py-spy record -o trace_processing.svg -- python -m obsvty.cli process-traces --sample-size 10000
+```
+
+✅ **Obsvty-specific hotspots (validated patterns):**
+```python
+# src/obsvty/core/processors.py
+# OPTIMIZATION: batch PII masking to reduce regex overhead
+# Baseline: 45ms/trace (10k traces)
+# After:     8.2ms/trace (82% improvement)
+# Trade-off: increased memory usage (batch processing)
+# Revert after: Rust implementation of masking engine
+def _mask_batch_traces(traces: list[TraceContext]) -> list[TraceContext]:
+    """Processes traces in batches of 100 for vectorized masking operations"""
+    results = []
+    for i in range(0, len(traces), 100):
+        batch = traces[i:i+100]
+        # Vectorized masking operations
+        masked_batch = _vectorized_masking(batch)
+        results.extend(masked_batch)
+    return results
+```
+
+## Memory Management
+✅ **Stream large datasets:**
+```python
+# src/obsvty/adapters/storage/postgres_repository.py
+def stream_traces_by_service(self, service_name: str, batch_size: int = 1000):
+    """Streams traces in batches to avoid OOM errors with large datasets"""
+    offset = 0
+    while True:
+        batch = self._query_batch(service_name, offset, batch_size)
+        if not batch:
+            break
+        yield batch
+        offset += batch_size
+```
+
+❌ **Blocked anti-patterns:**
+- Premature optimization of trace ingestion pipeline
+- Caching metric calculations without TTL validation
+- Using `@lru_cache` on functions with high memory footprint
+- Processing all data in memory for datasets >1GB
+
+## Performance Testing Requirements
+- Load tests with realistic data (10k+ traces/second)
+- Memory leak monitoring with `tracemalloc`
+- Throughput validation on production hardware
+- Degradation testing (what happens when CPU hits 90%?)

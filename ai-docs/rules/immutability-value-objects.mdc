@@ -1,0 +1,48 @@
+---
+description: "Immutable value objects with Pydantic v2 for observability data"
+alwaysApply: true
+---
+# Immutability & Value Objects for Observability
+
+## Pydantic v2 Immutability
+```python
+# src/obsvty/core/value_objects.py
+from pydantic import BaseModel, ConfigDict
+from datetime import datetime
+from typing import Dict
+
+class MetricPoint(BaseModel):
+    model_config = ConfigDict(frozen=True)  # ✅ Immutable
+    
+    timestamp: datetime
+    name: str
+    value: float
+    labels: Dict[str, str] = {}
+    
+    def with_label(self, key: str, value: str) -> "MetricPoint":
+        """Returns new instance with added label (doesn't modify original)"""
+        return MetricPoint(
+            timestamp=self.timestamp,
+            name=self.name,
+            value=self.value,
+            labels={**self.labels, key: value}
+        )
+```
+
+## Validation Patterns
+✅ **Constructor validation:**
+```python
+class SensitiveDataMasker:
+    PII_FIELDS = {"email", "cpf", "credit_card", "user_id"}
+    
+    def __init__(self, allowed_services: set[str]):
+        if not allowed_services:
+            raise ValueError("At least one service must be allowed for data processing")
+        self.allowed_services = frozenset(allowed_services)  # ✅ Immutable
+```
+
+❌ **Blocked anti-patterns:**
+- Direct mutation: `log_entry.labels["user_id"] = masked_id`
+- Returning mutable collections: `def get_labels() -> dict: return self._labels`
+- Using `Any` for telemetry data
+- Validation outside value object constructors

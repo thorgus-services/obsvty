@@ -1,0 +1,53 @@
+---
+description: "Privacy rules for sensitive data in observability"
+alwaysApply: true
+---
+# Privacy-First Observability
+
+## Data Handling Principles
+1. **Never store raw PII** - All sensitive fields must be masked at ingestion:
+```python
+# src/obsvty/adapters/masking.py
+import hashlib
+import re
+
+def hash_email(email: str) -> str:
+    """One-way hash for email addresses"""
+    return hashlib.sha256(email.lower().encode()).hexdigest()[:16]
+
+def mask_pii(log_entry: dict) -> dict:
+    """Masks PII fields before storage - called in adapters layer only"""
+    if email := log_entry.get("user_email"):
+        log_entry["user_email"] = hash_email(email)
+    
+    if user_id := log_entry.get("user_id"):
+        log_entry["user_id"] = f"usr_{hashlib.md5(str(user_id).encode()).hexdigest()[:8]}"
+    
+    # Remove sensitive fields completely
+    for field in ["credit_card", "cpf", "password"]:
+        log_entry.pop(field, None)
+        
+    return log_entry
+```
+
+2. **Isolate sensitive processing** - Privacy logic lives ONLY in `adapters/masking.py`:
+```python
+# src/obsvty/application/processors.py
+class TraceProcessor:
+    # ❌ NEVER do masking here - violates separation of concerns
+    def process(self, trace: TraceContext): ...
+```
+
+3. **Retention enforcement** - All data classes must declare TTL:
+```python
+class LogRecord(BaseModel):
+    retention_days: int = Field(default=30, ge=1, le=90)  # ✅ Enforced by Pydantic
+```
+
+## Testing Requirements
+- 100% test coverage for masking logic
+- Fuzz testing with synthetic PII data
+- Audit logs for all data access attempts
+
+> **Critical rule:**  
+> Any PR touching `adapters/masking.py` requires security team approval

@@ -1,0 +1,63 @@
+---
+description: "Exception hierarchy aligned with observability domain"
+alwaysApply: true
+---
+# Exception Hierarchy - Domain First
+
+## Exception Structure
+```python
+# src/obsvty/core/exceptions.py
+class ObservabilityException(Exception):
+    """Base exception for all observability domain errors"""
+    pass
+
+class TraceException(ObservabilityException):
+    """Base for trace-related exceptions"""
+    pass
+
+class InvalidTraceId(TraceException):
+    def __init__(self, trace_id: str, reason: str):
+        self.trace_id = trace_id
+        self.reason = reason
+        super().__init__(f"Invalid trace ID '{trace_id}': {reason}")
+
+class DataPrivacyException(ObservabilityException):
+    """Base for privacy-related exceptions"""
+    pass
+
+class PiiDetectionAttempt(DataPrivacyException):
+    def __init__(self, field: str, value: str):
+        self.field = field
+        self.value = value[:4] + "****"  # Never log full sensitive value
+        super().__init__(f"PII detected in field '{field}' during processing")
+```
+
+## Handling Strategy
+✅ **In Core:** Raise specific domain exceptions
+```python
+# src/obsvty/core/validators.py
+def validate_trace_context(trace: TraceContext) -> None:
+    if not trace.trace_id.startswith("obsv-"):
+        raise InvalidTraceId(trace.trace_id, "missing required prefix")
+```
+
+✅ **In Shell:** Translate to transport errors
+```python
+# src/obsvty/interfaces/grpc/trace_service.py
+from grpc import StatusCode
+
+def process_trace(self, request, context):
+    try:
+        trace = TraceContext.from_proto(request)
+        result = self.trace_processor.ingest_trace(trace)
+        return result.to_proto()
+    except InvalidTraceId as e:
+        context.abort(StatusCode.INVALID_ARGUMENT, str(e))
+    except PiiDetectionAttempt as e:
+        context.abort(StatusCode.FAILED_PRECONDITION, "Sensitive data detected")
+```
+
+❌ **Blocked anti-patterns:**
+- `raise Exception("Invalid data")` - always use specific exceptions
+- `except Exception as e:` without proper handling or logging
+- Returning `None` or error codes instead of raising exceptions in core
