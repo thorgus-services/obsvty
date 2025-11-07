@@ -14,7 +14,7 @@ Usage:
   python generate_protos.py --ref <branch-or-tag> [--force] [--timeout 20]
 
 Environment:
-  OTLP_PROTO_REF: optional, branch/tag to fetch (default: main)
+  OTLP_PROTO_REF: optional, branch/tag to fetch (default: v1.9.0)
 """
 
 import argparse
@@ -153,7 +153,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate OTLP gRPC stubs")
     parser.add_argument(
         "--ref",
-        default=os.getenv("OTLP_PROTO_REF", "main"),
+        default=os.getenv("OTLP_PROTO_REF", "v1.9.0"),
         help="Branch or tag to fetch",
     )
     parser.add_argument(
@@ -165,8 +165,8 @@ def main() -> int:
     args = parser.parse_args()
 
     project_root = Path(__file__).parent
-    proto_dir = project_root / "src/obsvty/adapters/messaging/proto"
-    generated_dir = project_root / "src/obsvty/adapters/messaging/generated"
+    proto_dir = project_root / "obsvty/src/obsvty/adapters/messaging/proto"
+    generated_dir = project_root / "obsvty/src/obsvty/adapters/messaging/generated"
     proto_dir.mkdir(parents=True, exist_ok=True)
     generated_dir.mkdir(parents=True, exist_ok=True)
 

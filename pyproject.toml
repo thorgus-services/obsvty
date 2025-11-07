@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Observability and context engineering framework"
 authors = ["Fernando Júnior <contato@fernandojr.dev>"]
 readme = "README.md"
-packages = [{ include = "obsvty", from = "src" }]
+packages = [
+    { include = "obsvty" },
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -20,11 +22,12 @@ pytest = "8.4.2"
 pytest-cov = "5.0.0"
 ruff = "0.8.6"
 mypy = "1.18.2"
-invoke = "2.2.0"
-safety = "2.3.5"
+safety = ">=2.5.0"
+bandit = "^1.7.8"
 pre-commit = "4.3.0"
 tomli = "2.0.1"
 opentelemetry-proto = "1.38.0"
+tox = "^4.32.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -34,7 +37,7 @@ build-backend = "poetry.core.masonry.api"
 line-length = 88
 target-version = "py311"
 extend-exclude = [
-    "src/obsvty/adapters/messaging/generated",
+    "obsvty/src/obsvty/adapters/messaging/generated",
 ]
 
 [tool.ruff.format]
@@ -47,10 +50,54 @@ skip-magic-trailing-comma = false
 # Like Black, automatically detect the EOL from the input.
 line-ending = "auto"
 
+[tool.pytest.ini_options]
+python_files = ["test_*.py"]
+testpaths = ["obsvty/tests/unit", "obsvty/tests/integration", "obsvty/tests/e2e"]
+addopts = "-v --tb=short --strict-markers --disable-warnings --cov=obsvty/src --cov-report=html --cov-report=term-missing --cov-fail-under=80"
+markers = [
+    "unit: Unit tests (no external dependencies, target Functional Core only)",
+    "integration: Integration tests (test Core + Adapter combinations)", 
+    "e2e: End-to-end tests (full workflow validation)",
+    "slow: Tests that take more than 1 second"
+]
+filterwarnings = [
+    "error",
+    "ignore::UserWarning",
+    "ignore::DeprecationWarning"
+]
+
+[tool.coverage.run]
+source = ["obsvty/src/"]
+omit = [
+    "*/__pycache__/*",
+    "*/obsvty/tests/*", 
+    "*/venv/*",
+    "*/.venv/*",
+    "*/adapters/messaging/generated/*"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError", 
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "if settings.debug:",
+    "if 0:",
+    "if __debug__:"
+]
+precision = 2
+show_missing = true
+skip_covered = false
+fail_under = 80
+
 [tool.mypy]
 strict = true
-files = ["src"]
-exclude = "src/obsvty/adapters/messaging/generated/.*"
+mypy_path = ["."]
+files = ["obsvty/src"]
+exclude = "obsvty/src/obsvty/adapters/messaging/generated/.*"
 
 [[tool.mypy.overrides]]
 module = [
@@ -62,7 +109,19 @@ module = [
     "grpc_health.*",
     "grpc_reflection",
     "grpc_reflection.*",
+    "grpc_reflection.v1alpha",
     "dotenv",
     "dotenv.*",
+    "opentelemetry.*",
+    "opentelemetry.proto.*",
+    "opentelemetry.proto.collector.*",
+    "opentelemetry.proto.collector.trace.v1.*",
+    "opentelemetry.proto.collector.metrics.v1.*",
+    "opentelemetry.proto.collector.logs.v1.*",
+    "opentelemetry.proto.trace.v1.*",
 ]
 ignore_missing_imports = true
+
+[tool.bandit]
+skips = ["B101"]  # Skip assert checks in tests
+exclude_dirs = ["obsvty/tests", "venv", ".venv", ".tox"]

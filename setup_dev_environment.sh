@@ -32,9 +32,9 @@ echo "[setup] Generating OTLP proto stubs..."
 python3 generate_protos.py --ref "${OTLP_PROTO_REF:-main}"
 
 echo "[setup] Running lint, typecheck, and tests..."
-poetry run invoke dev
+poetry run tox
 
-echo "[setup] Running safety vulnerability check..."
-poetry run invoke safety-check || echo "[setup] Safety check reported issues. Review above output."
+echo "[setup] Running security checks..."
+poetry run tox -e security || echo "[setup] Security checks reported issues. Review above output."
 
 echo "[setup] Development environment setup complete. ✅"
