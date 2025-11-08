@@ -72,10 +72,12 @@ Please read and follow our [Code of Conduct](./CODE_OF_CONDUCT.md) to foster a w
 ## Project Structure
 
 Obsvty follows Clean Architecture and Hexagonal Architecture principles. Key directories:
-- `src/obsvty/domain/` — Pure business logic
-- `src/obsvty/ports/` — Abstract interfaces (contracts)
-- `src/obsvty/use_cases/` — Application orchestration
-- `src/obsvty/adapters/` — Concrete implementations (DB, messaging, web)
+- `src/obsvty/domain/` — Pure business logic (entities, value objects, domain services)
+- `src/obsvty/application/` — Application layer (ports, DTOs, use case implementations)
+- `src/obsvty/infrastructure/` — Infrastructure implementations (DB, gRPC, messaging, external services)
+- `src/obsvty/application/ports/` — Abstract interfaces (contracts)
+- `src/obsvty/application/dto/` — Data transfer objects
+- `src/obsvty/domain/services/` — Domain services with business logic
 - `tests/` — Unit, integration, and e2e tests
 - `docs/` — Documentation and guides
 

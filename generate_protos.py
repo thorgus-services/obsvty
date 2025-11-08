@@ -165,8 +165,8 @@ def main() -> int:
     args = parser.parse_args()
 
     project_root = Path(__file__).parent
-    proto_dir = project_root / "obsvty/src/obsvty/adapters/messaging/proto"
-    generated_dir = project_root / "obsvty/src/obsvty/adapters/messaging/generated"
+    proto_dir = project_root / "src/obsvty/adapters/messaging/proto"
+    generated_dir = project_root / "src/obsvty/adapters/messaging/generated"
     proto_dir.mkdir(parents=True, exist_ok=True)
     generated_dir.mkdir(parents=True, exist_ok=True)
 

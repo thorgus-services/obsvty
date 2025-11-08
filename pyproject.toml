@@ -5,7 +5,7 @@ description = "Observability and context engineering framework"
 authors = ["Fernando Júnior <contato@fernandojr.dev>"]
 readme = "README.md"
 packages = [
-    { include = "obsvty" },
+    { include = "obsvty", from = "src" },
 ]
 
 [tool.poetry.dependencies]
@@ -37,7 +37,7 @@ build-backend = "poetry.core.masonry.api"
 line-length = 88
 target-version = "py311"
 extend-exclude = [
-    "obsvty/src/obsvty/adapters/messaging/generated",
+    "src/obsvty/adapters/messaging/generated",
 ]
 
 [tool.ruff.format]
@@ -52,8 +52,8 @@ line-ending = "auto"
 
 [tool.pytest.ini_options]
 python_files = ["test_*.py"]
-testpaths = ["obsvty/tests/unit", "obsvty/tests/integration", "obsvty/tests/e2e"]
-addopts = "-v --tb=short --strict-markers --disable-warnings --cov=obsvty/src --cov-report=html --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests/unit", "tests/integration", "tests/e2e"]
+addopts = "-v --tb=short --strict-markers --disable-warnings --cov=src --cov-report=html --cov-report=term-missing --cov-fail-under=80"
 markers = [
     "unit: Unit tests (no external dependencies, target Functional Core only)",
     "integration: Integration tests (test Core + Adapter combinations)", 
@@ -67,10 +67,10 @@ filterwarnings = [
 ]
 
 [tool.coverage.run]
-source = ["obsvty/src/"]
+source = ["src/"]
 omit = [
     "*/__pycache__/*",
-    "*/obsvty/tests/*", 
+    "*/tests/*", 
     "*/venv/*",
     "*/.venv/*",
     "*/adapters/messaging/generated/*"
@@ -96,8 +96,8 @@ fail_under = 80
 [tool.mypy]
 strict = true
 mypy_path = ["."]
-files = ["obsvty/src"]
-exclude = "obsvty/src/obsvty/adapters/messaging/generated/.*"
+files = ["src"]
+exclude = "src/obsvty/adapters/messaging/generated/.*"
 
 [[tool.mypy.overrides]]
 module = [
@@ -124,4 +124,4 @@ ignore_missing_imports = true
 
 [tool.bandit]
 skips = ["B101"]  # Skip assert checks in tests
-exclude_dirs = ["obsvty/tests", "venv", ".venv", ".tox"]
+exclude_dirs = ["tests", "venv", ".venv", ".tox"]

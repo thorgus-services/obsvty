@@ -91,7 +91,7 @@ We are building the **first functional end-to-end flow**:
 - **Frontend**: Streamlit (fast, iterative prototype)
 - **Extensibility**: Abstract interfaces for plugins (Git, LLM, Alerts, Docs)
 
-### Main interfaces (in `obsvty/ports/`):
+### Main interfaces (in `src/obsvty/application/ports/`):
 ```python
 class GitProvider(ABC): ...
 class LLMEngine(ABC): ...
@@ -281,9 +281,9 @@ otlp_exporter = OTLPSpanExporter(
 For a complete example, see `examples/otlp_client.py`.
 
 ### Architecture primitives (Ports & Use Cases)
-- Ports (in `src/obsvty/ports/`): `TraceIngestionPort`, `TraceBatchIngestionPort`, `TraceStoragePort`
-- Use Cases (in `src/obsvty/use_cases/`): `ProcessTraceUseCase`
-- Composition Root: `src/obsvty/main.py` with `build_use_cases(storage)`
+- Ports (in `src/obsvty/application/ports/`): `TraceIngestionPort`, `TraceBatchIngestionPort`, `TraceStoragePort`
+- Services (in `src/obsvty/domain/services/`): `otlp_processing.py` with `process_otlp_data()` function
+- Composition Root: `src/obsvty/main.py` with `create_application(buffer_size)` and `main(port, buffer_size)`
 
 Run the package entrypoint:
 ```bash
